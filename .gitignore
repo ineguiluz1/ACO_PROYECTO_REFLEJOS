@@ -1,0 +1,2 @@
+# Add the .env to the gitignore file
+.env

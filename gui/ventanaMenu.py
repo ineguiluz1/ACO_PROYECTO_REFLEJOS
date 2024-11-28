@@ -59,63 +59,75 @@ class VentanaMenu(tk.Toplevel):
         def relative_to_assets(path: str) -> Path:
             return ASSETS_PATH / Path(path)
 
+        # Crear el Canvas
         canvas = Canvas(
             self.frame_derecho,
             bg="#505050",
             height=500,
-            width=700,
+            width=900,
             bd=0,
             highlightthickness=0,
             relief="ridge"
         )
         canvas.pack(fill="both", expand=True)
 
-        image_image_3 = PhotoImage(
-            file=relative_to_assets("image_3.png"))
-        canvas.create_image(
-            359.0,
-            250.0,
-            image=image_image_3
-        )
+        # Cargar imágenes
+        try:
+            self.image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
+            self.image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
+            self.button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
+        except Exception as e:
+            print(f"Error al cargar las imágenes: {e}")
+            return
 
-        canvas.create_text(
-            195.0,
-            180.0,
-            anchor="nw",
-            text="0.000",
-            fill="#FFFFFF",
-            font=("Lalezar Regular", 128 * -1)
-        )
+        def redibujar(event=None):
+            canvas.delete("all")
 
-        button_image_1 = PhotoImage(
-            file=relative_to_assets("button_1.png"))
+            
+            canvas.create_image(
+                canvas.winfo_width() / 2,
+                canvas.winfo_height() / 2,
+                image=self.image_image_3,
+                tags="image_3"
+            )
+
+            
+            canvas.create_text(
+                canvas.winfo_width() / 2,
+                canvas.winfo_height() / 2 - 50,
+                text="0.000",
+                fill="#FFFFFF",
+                font=("Arial", 64),
+                tags="texto"
+            )
+
+            
+            canvas.create_image(
+                canvas.winfo_width() / 2,
+                50,
+                image=self.image_image_2,
+                tags="image_2"
+            )
+
+            
+            button_1.place(
+                relx=0.5,
+                rely=0.8,
+                anchor="center",
+            )
+
+        
         button_1 = Button(
             self.frame_derecho,
-            image=button_image_1,
+            image=self.button_image_1,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_1 clicked"),
             relief="flat"
         )
-        button_1.image = button_image_1  # Evitar que la imagen sea recolectada por el garbage collector
-        button_1.place(
-            x=297.0,
-            y=381.0,
-            width=125.0,
-            height=43.0
-        )
+        button_1.image = self.button_image_1
 
-        image_image_2 = PhotoImage(
-            file=relative_to_assets("image_2.png"))
-        canvas.create_image(
-            350.0,
-            34.0,
-            image=image_image_2
-        )
+        canvas.bind("<Configure>", redibujar)
 
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.withdraw()  # Ocultar la ventana principal
-    ventana = VentanaMenu(master=root)
-    ventana.mainloop()
+        # Llamar al redibujado inicial
+        redibujar()

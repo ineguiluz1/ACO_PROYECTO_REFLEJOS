@@ -24,7 +24,7 @@ class VentanaPrincipal:
             self.window,
             bg="#FFFFFF",
             height=768,
-            width=1200,
+            width=1400,
             bd=0,
             highlightthickness=0,
             relief="ridge"

@@ -1,8 +1,8 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from PIL import Image, ImageTk
-from menuWindow import VentanaMenu
-from registerWindow import VentanaRegistro
+from ventanaMenu import VentanaMenu
+from Pruebas import VentanaRegistro
 
 class VentanaPrincipal:
     def __init__(self):
@@ -12,7 +12,7 @@ class VentanaPrincipal:
 
         """Path de las imágenes"""
         self.OUTPUT_PATH = Path(__file__).parent
-        self.ASSETS_PATH = "frame0"
+        self.ASSETS_PATH = self.OUTPUT_PATH / Path(r"..\frame0")
 
         self.window = Tk()
         self.window.geometry("1024x768")
@@ -31,7 +31,7 @@ class VentanaPrincipal:
         )
         self.canvas.place(x=0, y=0)
 
-        bg_image_path = self.relative_to_assets("frame0/image_1.png")
+        bg_image_path = self.relative_to_assets("image_1.png")
         original_image = Image.open(bg_image_path) 
         resized_image = original_image.resize((1024,768), Image.Resampling.LANCZOS) 
         self.bg_image = ImageTk.PhotoImage(resized_image)  
@@ -44,7 +44,7 @@ class VentanaPrincipal:
         return self.ASSETS_PATH / Path(path)
 
     def _crear_componentes(self):
-        entry_image_1 = PhotoImage(file=self.relative_to_assets("frame0/entry_1.png"))
+        entry_image_1 = PhotoImage(file=self.relative_to_assets("entry_1.png"))
         self.canvas.create_image(111.0, 366.0, image=entry_image_1)
         self.entryPwd = Entry(
             self.window,
@@ -56,7 +56,7 @@ class VentanaPrincipal:
         )
         self.entryPwd.place(x=16.0, y=650.0, width=190.0, height=18.0)
 
-        entry_image_2 = PhotoImage(file=self.relative_to_assets("frame0/entry_2.png"))
+        entry_image_2 = PhotoImage(file=self.relative_to_assets("entry_2.png"))
         self.canvas.create_image(111.0, 308.0, image=entry_image_2)
         self.entryEmail = Entry(
             self.window,

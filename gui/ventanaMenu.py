@@ -54,7 +54,7 @@ class VentanaMenu(tk.Toplevel):
     def mostrar_reaccion_visual(self):
         # Ruta relativa a los assets
         OUTPUT_PATH = Path(__file__).parent
-        ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\mpsua\OneDrive\Escritorio\ud\TERCERO\ACO\proyecto\mierdon\chusta\build\assets\frame0")
+        ASSETS_PATH = OUTPUT_PATH / Path(r"../frame0")
 
         def relative_to_assets(path: str) -> Path:
             return ASSETS_PATH / Path(path)

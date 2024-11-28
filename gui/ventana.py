@@ -2,7 +2,7 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from PIL import Image, ImageTk
 from ventanaMenu import VentanaMenu
-from Pruebas import VentanaRegistro
+from VentanaRegistro import VentanaRegistro
 
 class VentanaPrincipal:
     def __init__(self):

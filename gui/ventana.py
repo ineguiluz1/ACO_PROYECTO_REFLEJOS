@@ -12,7 +12,7 @@ class VentanaPrincipal:
 
         """Path de las imágenes"""
         self.OUTPUT_PATH = Path(__file__).parent
-        self.ASSETS_PATH = self.OUTPUT_PATH / Path(r"C:\Users\mpsua\OneDrive\Escritorio\ud\TERCERO\ACO\proyecto\ventana\build\assets\frame0")
+        self.ASSETS_PATH = self.OUTPUT_PATH / Path(r"..\frame0")
 
         self.window = Tk()
         self.window.geometry("1024x768")

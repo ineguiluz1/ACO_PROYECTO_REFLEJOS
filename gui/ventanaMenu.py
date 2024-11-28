@@ -54,7 +54,7 @@ class VentanaMenu(tk.Toplevel):
     def mostrar_reaccion_visual(self):
         # Ruta relativa a los assets
         OUTPUT_PATH = Path(__file__).parent
-        ASSETS_PATH = OUTPUT_PATH / Path(r"../frame0")
+        ASSETS_PATH = OUTPUT_PATH / Path(r"..\frame0")
 
         def relative_to_assets(path: str) -> Path:
             return ASSETS_PATH / Path(path)
@@ -70,12 +70,12 @@ class VentanaMenu(tk.Toplevel):
         )
         canvas.pack(fill="both", expand=True)
 
-        image_image_1 = PhotoImage(
-            file=relative_to_assets("image_1.png"))
+        image_image_3 = PhotoImage(
+            file=relative_to_assets("image_3.png"))
         canvas.create_image(
             359.0,
             250.0,
-            image=image_image_1
+            image=image_image_3
         )
 
         canvas.create_text(

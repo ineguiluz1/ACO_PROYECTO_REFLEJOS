@@ -2,13 +2,16 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
 from PIL import Image, ImageTk
 from ventanaMenu import VentanaMenu
-from Pruebas import VentanaRegistro
+from pruebaReg import VentanaRegistro
 
 class VentanaPrincipal:
     def __init__(self):
-        """Usuario de ejemplo"""
-        self.usuario = "ejemplo@gmail.com"
-        self.contraseña = "1234"
+
+        '''HE CREADO UN MAPA BÁSICO HASTA TENER LA BD'''
+
+        self.usuarios = {
+            "ejemplo@gmail.com": "1234" 
+        }
 
         """Path de las imágenes"""
         self.OUTPUT_PATH = Path(__file__).parent
@@ -110,14 +113,17 @@ class VentanaPrincipal:
     def login(self):
         email = self.entryEmail.get()
         password = self.entryPwd.get()
-        if email == self.usuario and password == self.contraseña:
+        if email in self.usuarios and self.usuarios[email] == password:
             self.window.withdraw()
             VentanaMenu(master=self.window)
         else:
             messagebox.showinfo("Error en el inicio de sesión", "Usuario o contraseña incorrectos")
 
     def register(self):
-        VentanaRegistro(master=self.window)
+        VentanaRegistro(master=self.window, usuarios=self.usuarios)
+
+    def cerrar_ventana(self):
+        self.window.quit()
 
 
 if __name__ == "__main__":

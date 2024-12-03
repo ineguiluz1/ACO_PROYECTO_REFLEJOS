@@ -1,60 +1,106 @@
-import tkinter as tk
-from tkinter import ttk, font
-from tkinter import Canvas
 import customtkinter as ctk
-import sys
-
-# Funciones para cambiar el color del botón
-def cambiar_color_entrada(event):
-    btn_crear_cuenta.config(background="#2ECC71")
-
-def cambiar_color_salida(event):
-    btn_crear_cuenta.config(background="#27AE60")
 
 
-# Crear la ventana principal
-ventana = tk.Tk()
-ventana.title("Registro")
-ventana.geometry("1440x900")
-ventana.configure(bg="#2A2A2A")
+class VentanaRegister:
+    def __init__(self):
+        # Initialize CustomTkinter (theme and scaling)
+        ctk.set_appearance_mode("dark")  # Modes: "System", "Dark", "Light"
+        ctk.set_default_color_theme("blue")  # Themes: "blue", "dark-blue", "green"
 
-frame = tk.Frame(ventana, bg="#2A2A2A")
-frame.pack(fill="both", expand=True)
+        # Create the main window
+        self.ventana = ctk.CTk()
+        self.ventana.title("Registro")
+        self.ventana.geometry("1440x900")
 
-lbl_titulo = tk.Label(frame, text="Crea tu cuenta!!", font=("Fredoka Medium", 96), bg="#2A2A2A", fg="#5DADE2")
-lbl_titulo.pack(pady=(80, 10))
+        # Create the main frame
+        self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")
+        self.frame.pack(fill="both", expand=True, padx=20, pady=20)
 
+        # Add widgets
+        self.crear_widgets()
 
+        # Run the main loop
+        self.ventana.mainloop()
 
-# Crear los campos de entrada (Email, Contraseña y Nickname)
-lbl_email = tk.Label(frame, text="Email:", font=("Fredoka Medium", 24), bg="#2A2A2A", fg="#ffffff")
-lbl_email.pack(pady=(10, 5))
+    def crear_widgets(self):
+        # Title label
+        lbl_titulo = ctk.CTkLabel(
+            self.frame,
+            text="Crea tu cuenta!!",
+            font=ctk.CTkFont("Fredoka Medium", size=72),
+            text_color="#5DADE2",
+        )
+        lbl_titulo.pack(pady=(80, 10))
 
-entry_email = tk.Entry(frame, font=("Fredoka Medium", 24), width=30, bg="#FAD7A0")
-entry_email.pack(pady=(0, 20))
+        # Email input
+        lbl_email = ctk.CTkLabel(
+            self.frame, text="Email:", font=ctk.CTkFont("Fredoka Medium", size=24)
+        )
+        lbl_email.pack(pady=(10, 5))
 
-lbl_contrasena = tk.Label(frame, text="Contraseña:", font=("Fredoka Medium", 24), bg="#2A2A2A", fg="#ffffff")
-lbl_contrasena.pack(pady=(10, 5))
+        self.entry_email = ctk.CTkEntry(
+            self.frame,
+            font=ctk.CTkFont("Fredoka Medium", size=20),
+            width=400,
+            height=40,
+            corner_radius=10,
+        )
+        self.entry_email.pack(pady=(0, 20))
 
-entry_contrasena = tk.Entry(frame, font=("Fredoka Medium", 24), width=30, show="*", bg="#FAD7A0") # 'show' oculta la contraseña
-entry_contrasena.pack(pady=(0, 20))
+        # Password input
+        lbl_contrasena = ctk.CTkLabel(
+            self.frame,
+            text="Contraseña:",
+            font=ctk.CTkFont("Fredoka Medium", size=24),
+        )
+        lbl_contrasena.pack(pady=(10, 5))
 
-lbl_nickname = tk.Label(frame, text="Nickname:", font=("Fredoka Medium", 24), bg="#2A2A2A", fg="#ffffff")
-lbl_nickname.pack(pady=(10, 5))
+        self.entry_contrasena = ctk.CTkEntry(
+            self.frame,
+            font=ctk.CTkFont("Fredoka Medium", size=20),
+            width=400,
+            height=40,
+            corner_radius=10,
+            show="*",
+        )
+        self.entry_contrasena.pack(pady=(0, 20))
 
-entry_nickname = tk.Entry(frame, font=("Fredoka Medium", 24), width=30, bg="#FAD7A0")
-entry_nickname.pack(pady=(0, 40))
+        # Nickname input
+        lbl_nickname = ctk.CTkLabel(
+            self.frame, text="Nickname:", font=ctk.CTkFont("Fredoka Medium", size=24)
+        )
+        lbl_nickname.pack(pady=(10, 5))
 
-# Crear el botón "Crear Cuenta"
-btn_crear_cuenta = tk.Button(frame, text="Crear Cuenta", font=("Fredoka Medium", 24), bg="#27AE60", fg="#ffffff", width=20, height=2)
-btn_crear_cuenta.pack(pady=(10, 10))
+        self.entry_nickname = ctk.CTkEntry(
+            self.frame,
+            font=ctk.CTkFont("Fredoka Medium", size=20),
+            width=400,
+            height=40,
+            corner_radius=10,
+        )
+        self.entry_nickname.pack(pady=(0, 40))
 
-# Asociar los eventos de entrada y salida del cursor con el botón
-btn_crear_cuenta.bind("<Enter>", cambiar_color_entrada)
-btn_crear_cuenta.bind("<Leave>", cambiar_color_salida)
+        # Create account button
+        self.btn_crear_cuenta = ctk.CTkButton(
+            self.frame,
+            text="Crear Cuenta",
+            font=ctk.CTkFont("Fredoka Medium", size=24),
+            width=300,
+            height=50,
+            corner_radius=50,
+            fg_color="#27AE60",
+            text_color="#ffffff"
+        )
+        self.btn_crear_cuenta.pack(pady=(10, 10))
 
-# Añadir el protocolo de la ventana
-ventana.protocol("WM_DELETE_WINDOW", ventana.quit)
+        # Bind hover events to the button
+        self.btn_crear_cuenta.bind("<Enter>", self.cambiar_color_entrada)
+        self.btn_crear_cuenta.bind("<Leave>", self.cambiar_color_salida)
 
-# Iniciar el bucle principal
-ventana.mainloop()
+    # Event handlers
+    def cambiar_color_entrada(self, event):
+        self.btn_crear_cuenta.configure(fg_color="#2ECC71")
+
+    def cambiar_color_salida(self, event):
+        self.btn_crear_cuenta.configure(fg_color="#27AE60")
+

@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
+from customtkinter import CTkImage
+
 
 # Configuración de customtkinter
 ctk.set_appearance_mode("Dark")  # Opciones: "Dark", "Light"
@@ -129,8 +131,9 @@ class Sidebar(ctk.CTkFrame):
 
 class MenuButton(ctk.CTkButton):
     def __init__(self, master, imagePath, color, command, y):
-        icon = Image.open(imagePath).resize((50, 50))
-        self.image = ImageTk.PhotoImage(icon)
+        # icon = Image.open(imagePath).resize((50, 50))
+        icon = Image.open(imagePath).resize((30, 30))
+        self.image = CTkImage(icon,size=(30,30))
         super().__init__(master,
                          image=self.image,
                          fg_color=color,

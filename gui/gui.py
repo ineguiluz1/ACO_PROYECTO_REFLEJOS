@@ -1,12 +1,13 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from customtkinter import CTkImage
+from controller.controller import Controller
 
+controller = Controller()
 
 # Configuración de customtkinter
 ctk.set_appearance_mode("Dark")  # Opciones: "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
-
 
 class Sidebar(ctk.CTkFrame):
     menu_color = "#383838"
@@ -58,14 +59,14 @@ class Sidebar(ctk.CTkFrame):
                 self.expandSidebar()
 
     def extendSidebar(self):
-        current = self.winfo_width()
+        current = self.winfo_width()/2
         if current < 200:
             new_width = current + self.width_step
             self.configure(width=new_width)
             self.after(10, self.extendSidebar)
 
     def contractSidebar(self):
-        current = self.winfo_width()
+        current = self.winfo_width()/2
         # print(f"Current width: {current}")
         if current > 45:
             self.configure(width=45)
@@ -100,8 +101,8 @@ class MenuButton(ctk.CTkButton):
         self.place(x=3, y=y)
 
     def updateImage(self, imagePath):
-        icon = Image.open(imagePath).resize((50, 50))
-        self.image = ImageTk.PhotoImage(icon)
+        icon = Image.open(imagePath).resize((30, 30))
+        self.image = CTkImage(icon, size=(30, 30))
         self.configure(image=self.image)
 
 
@@ -110,21 +111,20 @@ class LedModePage(ctk.CTkFrame):
         super().__init__(master)  # Cambiado 'bg' por 'fg_color'
         self.lbl_titulo = ctk.CTkLabel(self, text="LED Mode", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_titulo.pack(pady=10)
-        self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_contador = ctk.CTkLabel(self, text="000", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_contador.pack(pady=50)
         self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
         self.btn_retry.pack(pady=70)
+        self.btn_retry.bind("<Button-1>", lambda e: controller.led_button_click(self))
 
-
-
+    def update_timer(self, tiempo):
+        self.lbl_contador.configure(text=tiempo)
 
 class BuzzerModePage(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master, fg_color="#32a852")  # Cambiado 'bg' por 'fg_color'
         lbl = ctk.CTkLabel(self, text="Buzzer Mode", fg_color="#2A2A2A", text_color="white", font=("Fredoka Medium", 96))
         lbl.pack(pady=10)
-
-
 
 class AnimatedSidebarApp(ctk.CTk):
     def __init__(self):

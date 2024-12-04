@@ -14,52 +14,9 @@ class Sidebar(ctk.CTkFrame):
     def __init__(self, master, width):
         super().__init__(master, width=width,fg_color=self.menu_color)
         self.master = master
-        # height = master.winfo_height()
-        # self.place(x=0, y=0, height=self.master.winfo_height())
-
-        # def extendSidebar():
-        #     current = self.winfo_width() / 2
-        #     if current < 200:
-        #         new_width = current + self.width_step
-        #         self.configure(width=new_width)
-        #         self.after(10, extendSidebar)
-        #
-        # def contractSidebar():
-        #     current = self.winfo_width() / 2
-        #     # print(f"Current width: {current}")
-        #     if current > 45:
-        #         self.configure(width=45)
-        #         # new_width = current - 10
-        #         # self.configure(width=new_width)
-        #         # self.after(10, contractSidebar)
-
-        # def expandSidebar():
-        #     if self.flagExpanded:
-        #         self.contractSidebar()
-        #         self.menuButton.updateImage("icons/menu.png")
-        #         self.flagExpanded = False
-        #     else:
-        #         self.extendSidebar()
-        #         self.menuButton.updateImage("icons/close.png")
-        #         self.flagExpanded = True
 
         self.menuButton = MenuButton(self, "icons/menu.png", self.menu_color, self.expandSidebar, 10)
 
-        # def switch_page(page):
-        #     if page == "led":
-        #         self.led_btn_indicator.configure(fg_color="#ffffff")
-        #         self.buzzer_btn_indicator.configure(fg_color=self.menu_color)
-        #         self.master.show_page("led")
-        #         if self.flagExpanded:
-        #             contractSidebar()
-        #     elif page == "buzzer":
-        #         self.led_btn_indicator.configure(fg_color=self.menu_color)
-        #         self.buzzer_btn_indicator.configure(fg_color="#ffffff")
-        #         self.master.show_page("buzzer")
-        #         if self.flagExpanded:
-        #             contractSidebar()
-
-        # ledButton = MenuButton(self, "icons/led.png", self.menu_color, lambda: self.master.show_page("led"), 70)
         ledButton = MenuButton(self, "icons/led.png", self.menu_color, lambda: self.switch_page("led"), 70)
         self.led_btn_indicator = ctk.CTkLabel(self, width=3, height=30,text="", fg_color=self.menu_color)
         self.led_btn_indicator.place(x=3, y=70)
@@ -70,7 +27,6 @@ class Sidebar(ctk.CTkFrame):
         # lbl_led.bind('<Button-1>', lambda e: self.master.show_page("led"))
         lbl_led.bind('<Button-1>', lambda e: self.switch_page("led"))
 
-        # buzzerButton = MenuButton(self, "icons/buzzer.png", self.menu_color, lambda: self.master.show_page("buzzer"), 130)
         buzzerButton = MenuButton(self, "icons/buzzer.png", self.menu_color, lambda: self.switch_page("buzzer"), 130)
         self.buzzer_btn_indicator = ctk.CTkLabel(self, width=3, height=30, text="", fg_color=self.menu_color)
         self.buzzer_btn_indicator.place(x=3, y=130)
@@ -100,14 +56,14 @@ class Sidebar(ctk.CTkFrame):
                 self.expandSidebar()
 
     def extendSidebar(self):
-        current = self.winfo_width() / 2
+        current = self.winfo_width()
         if current < 200:
             new_width = current + self.width_step
             self.configure(width=new_width)
             self.after(10, self.extendSidebar)
 
     def contractSidebar(self):
-        current = self.winfo_width() / 2
+        current = self.winfo_width()
         # print(f"Current width: {current}")
         if current > 45:
             self.configure(width=45)
@@ -148,15 +104,21 @@ class MenuButton(ctk.CTkButton):
 
 class LedModePage(ctk.CTkFrame):
     def __init__(self, master):
-        super().__init__(master, fg_color="#eb0edc")  # Cambiado 'bg' por 'fg_color'
-        lbl = ctk.CTkLabel(self, text="LED Mode", fg_color="#2A2A2A", text_color="white", font=("Arial", 30))
-        lbl.pack(pady=10)
+        super().__init__(master)  # Cambiado 'bg' por 'fg_color'
+        self.lbl_titulo = ctk.CTkLabel(self, text="LED Mode", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_titulo.pack(pady=10)
+        self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_contador.pack(pady=50)
+        self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
+        self.btn_retry.pack(pady=70)
+
+
 
 
 class BuzzerModePage(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master, fg_color="#32a852")  # Cambiado 'bg' por 'fg_color'
-        lbl = ctk.CTkLabel(self, text="Buzzer Mode", fg_color="#2A2A2A", text_color="white", font=("Arial", 30))
+        lbl = ctk.CTkLabel(self, text="Buzzer Mode", fg_color="#2A2A2A", text_color="white", font=("Fredoka Medium", 96))
         lbl.pack(pady=10)
 
 
@@ -189,6 +151,8 @@ class AnimatedSidebarApp(ctk.CTk):
         for page in self.pages.values():
             page.pack_forget()
         self.pages[page_name].pack(fill="both", expand=True, pady=4, padx=3)
+
+
 
 
 # Ejecutar la aplicación

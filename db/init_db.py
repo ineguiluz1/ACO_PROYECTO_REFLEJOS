@@ -1,6 +1,7 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
+from ACO_PROYECTO_REFLEJOS.db import authManager as auth
 
 # Load environment variables
 load_dotenv()
@@ -73,6 +74,8 @@ def initialize_db():
         # Create the tables
         create_tables(conn, cur)
 
+        # Register a user
+        auth.register("admin", "admin@mail.com", "admin", cur, conn)
         # Commit the changes to the database
         conn.commit()
 

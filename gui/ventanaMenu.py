@@ -44,7 +44,7 @@ class VentanaMenu(tk.Toplevel):
             self.mostrar_reaccion_visual()
         elif modo == "Reacción Auditiva":
             label = tk.Label(self.frame_derecho, text="Entrena tus reflejos auditivos reaccionando a sonidos.",
-                             font=("Arial", 12), bg="#505050", fg="white")
+                             font=("Fredoka Medium", 12), bg="#505050", fg="white")
             label.pack(pady=20)
         else:
             label = tk.Label(self.frame_derecho, text="Selecciona un modo de juego.",

@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from ventanaRegister import VentanaRegister
+from GUIController import GUIController
 
 class VentanaLogin:
     def __init__(self):
@@ -10,6 +11,8 @@ class VentanaLogin:
         self.ventana = ctk.CTk()
         self.ventana.title("Login")
         self.ventana.geometry("1440x900")
+
+        self.controller = GUIController()
 
         # Evento para cerrar la ventana
         self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar_ventana)
@@ -38,6 +41,8 @@ class VentanaLogin:
             text_color="#FFFFFF"
         )
         self.btn_iniciar_sesion.pack(pady=(0, 20))
+
+        self.btn_iniciar_sesion.configure(command=self.inicar_sesion)
 
         # Crear panel de registro
         self.panel_registro = PanelRegistro(self.frame)
@@ -78,6 +83,16 @@ class VentanaLogin:
     def cerrar_ventana(self):
         self.ventana.quit()
         self.ventana.destroy()
+
+    def inicar_sesion(self):
+        email = self.widget_credenciales.entry_email.get()
+        password = self.widget_credenciales.entry_contrasena.get()
+        print(email, password)
+
+        if self.controller.verificar_login(email, password, self):
+            print("Inicio de sesión exitoso")
+        else:
+            print("Inicio de sesión fallido")
 
 
 

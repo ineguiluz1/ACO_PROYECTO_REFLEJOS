@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 
+
 # Configuración de customtkinter
 ctk.set_appearance_mode("Dark")  # Opciones: "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
@@ -13,6 +14,9 @@ class Sidebar(ctk.CTkFrame):
 
     def __init__(self, master, width):
         super().__init__(master, width=width,fg_color=self.menu_color)
+
+
+
         self.master = master
 
         self.menuButton = MenuButton(self, "icons/menu.png", self.menu_color, self.expandSidebar, 10)
@@ -104,7 +108,7 @@ class MenuButton(ctk.CTkButton):
 
 class LedModePage(ctk.CTkFrame):
     def __init__(self, master):
-        super().__init__(master)  # Cambiado 'bg' por 'fg_color'
+        super().__init__(master)
         self.lbl_titulo = ctk.CTkLabel(self, text="LED Mode", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_titulo.pack(pady=10)
         self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
@@ -117,9 +121,13 @@ class LedModePage(ctk.CTkFrame):
 
 class BuzzerModePage(ctk.CTkFrame):
     def __init__(self, master):
-        super().__init__(master, fg_color="#32a852")  # Cambiado 'bg' por 'fg_color'
-        lbl = ctk.CTkLabel(self, text="Buzzer Mode", fg_color="#2A2A2A", text_color="white", font=("Fredoka Medium", 96))
-        lbl.pack(pady=10)
+        super().__init__(master)
+        self.lbl_titulo = ctk.CTkLabel(self, text="Buzzer Mode", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_titulo.pack(pady=10)
+        self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_contador.pack(pady=50)
+        self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
+        self.btn_retry.pack(pady=70)
 
 
 
@@ -156,5 +164,5 @@ class AnimatedSidebarApp(ctk.CTk):
 
 
 # Ejecutar la aplicación
-app = AnimatedSidebarApp()
-app.mainloop()
+#app = AnimatedSidebarApp()
+#app.mainloop()

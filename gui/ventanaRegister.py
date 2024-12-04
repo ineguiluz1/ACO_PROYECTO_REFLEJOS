@@ -1,4 +1,6 @@
 import customtkinter as ctk
+from GUIController import GUIController
+from gui import AnimatedSidebarApp
 
 
 class VentanaRegister:
@@ -12,6 +14,9 @@ class VentanaRegister:
         self.ventana.title("Registro")
         self.ventana.geometry("1440x900")
 
+        # Create the GUI controller
+        self.controller = GUIController()
+
         # Create the main frame
         self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")
         self.frame.pack(fill="both", expand=True, padx=20, pady=20)
@@ -19,8 +24,17 @@ class VentanaRegister:
         # Add widgets
         self.crear_widgets()
 
+        # Bind register
+        self.btn_crear_cuenta.configure(command=self.registrar_jugador)
+
         # Run the main loop
         self.ventana.mainloop()
+
+    def registrar_jugador(self):
+        email = self.entry_email.get()
+        password = self.entry_contrasena.get()
+        username = self.entry_nickname.get()
+        self.controller.registrar_jugador(email, password, username)
 
     def crear_widgets(self):
         # Title label

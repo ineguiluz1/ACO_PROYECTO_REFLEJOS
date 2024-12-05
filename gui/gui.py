@@ -115,7 +115,7 @@ class LedModePage(ctk.CTkFrame):
         super().__init__(master)
         self.lbl_titulo = ctk.CTkLabel(self, text="LED Mode", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_titulo.pack(pady=10)
-        self.lbl_contador = ctk.CTkLabel(self, text="000", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_contador = ctk.CTkLabel(self, text="0", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_contador.pack(pady=50)
         self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
         self.btn_retry.pack(pady=70)
@@ -129,10 +129,15 @@ class BuzzerModePage(ctk.CTkFrame):
         super().__init__(master)
         self.lbl_titulo = ctk.CTkLabel(self, text="Buzzer Mode", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_titulo.pack(pady=10)
-        self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_contador = ctk.CTkLabel(self, text="0", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_contador.pack(pady=50)
         self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
         self.btn_retry.pack(pady=70)
+        self.btn_retry.bind("<Button-1>", lambda e: controller.buzzer_button_click(self))
+
+    def update_timer(self, tiempo):
+        self.lbl_contador.configure(text=tiempo)
+
 
 class AnimatedSidebarApp(ctk.CTk):
     def __init__(self):
@@ -167,5 +172,5 @@ class AnimatedSidebarApp(ctk.CTk):
 
 
 # Ejecutar la aplicación
-#app = AnimatedSidebarApp()
-#app.mainloop()
+app = AnimatedSidebarApp()
+app.mainloop()

@@ -21,6 +21,14 @@ class MicroManager:
         self.disconnect()
         return tiempo
 
+    def mode2(self):
+        self.connect()
+        self.send_data("2")
+        self.wait_for_data()
+        tiempo = self.wait_for_data()
+        self.disconnect()
+        return tiempo
+
     def connect(self):
         try:
             self.connection = serial.Serial(self.port, baudrate=self.baudrate, timeout=1)

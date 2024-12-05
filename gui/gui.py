@@ -111,51 +111,123 @@ class MenuButton(ctk.CTkButton):
 
 
 class LedModePage(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, mainWindow):
+        self.mainWindow = mainWindow
         super().__init__(master)
-        self.btn_instrucciones = ctk.CTkButton(self, text="Instrucciones", font=("Fredoka Medium", 20), width=50, height=40, fg_color="#27AE60", text_color="white", corner_radius=30)
+        self.btn_instrucciones = ctk.CTkButton(self,
+                                               text="Instrucciones",
+                                               font=("Fredoka Medium", 20),
+                                               width=50, height=40,
+                                               fg_color="#27AE60",
+                                               text_color="white",
+                                               corner_radius=30,
+                                               command=self.show_dialog)
         self.btn_instrucciones.place(x=10, y=20)
         self.lbl_titulo = ctk.CTkLabel(self, text="LED Mode", text_color="white", font=("Fredoka Medium", 96))
-        self.lbl_titulo.pack(pady=(50,20))
-        self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_titulo.pack(pady=(70,20))
+        self.lbl_contador = ctk.CTkLabel(self, text="0", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_contador.pack(pady=(20,30))
-        self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
+        self.btn_retry = ctk.CTkButton(self, text="GO!", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white",corner_radius=25)
         self.btn_retry.pack(pady=50)
         self.btn_retry.bind("<Button-1>", lambda e: controller.led_button_click(self))
 
     def update_timer(self, tiempo):
         self.lbl_contador.configure(text=tiempo)
 
+    def show_dialog(self):
+        # Crear una ventana emergente (JOptionPane)
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Instrucciones")
+        dialog.geometry("300x200")
+        dialog.resizable(False, False)
+
+        # Hacer que la ventana aparezca sobre la principal
+        dialog.transient(self.master)  # Vincula la ventana emergente a la principal
+        dialog.grab_set()  # Bloquea la interacción con la ventana principal
+        dialog.focus()  # Da foco a la ventana emergente
+
+        # Etiqueta con mensaje
+        label = ctk.CTkLabel(dialog,
+                             text="Cuando se pulse el botón GO!, "
+                                          "después de un tiempo de espera "
+                                          "aleatorio se encenderá uno de "
+                                          "los dos LEDs y lo tendrás que "
+                                          "pulsar lo más rápido posible.",
+                             font=("Arial", 16),
+                             wraplength=280)
+        label.pack(pady=20)
+
+        # Botones para interactuar con el JOptionPane
+        button_ok = ctk.CTkButton(dialog, text="OK", command=dialog.destroy)  # Cerrar el diálogo
+        button_ok.pack(pady=10)
+
 class BuzzerModePage(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
-        self.btn_instrucciones = ctk.CTkButton(self, text="Instrucciones", font=("Fredoka Medium", 20), width=50, height=40, fg_color="#27AE60", text_color="white", corner_radius=30)
+        self.btn_instrucciones = ctk.CTkButton(self,
+                                               text="Instrucciones",
+                                               font=("Fredoka Medium", 20),
+                                               width=50, height=40, fg_color="#27AE60", text_color="white",
+                                               corner_radius=30,
+                                               command=self.show_dialog)
         self.btn_instrucciones.place(x=10, y=20)
         self.lbl_titulo = ctk.CTkLabel(self, text="Buzzer Mode", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_titulo.pack(pady=(70,20))
-        self.lbl_contador = ctk.CTkLabel(self, text="00:00", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_contador = ctk.CTkLabel(self, text="0", text_color="white", font=("Fredoka Medium", 96))
         self.lbl_contador.pack(pady=(20,30))
-        self.btn_retry = ctk.CTkButton(self, text="Retry", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white")
+        self.btn_retry = ctk.CTkButton(self, text="GO!", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white", corner_radius=25)
         self.btn_retry.pack(pady=50)
         self.btn_retry.bind("<Button-1>", lambda e: controller.buzzer_button_click(self))
 
     def update_timer(self, tiempo):
         self.lbl_contador.configure(text=tiempo)
 
+    def show_dialog(self):
+        # Crear una ventana emergente (JOptionPane)
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Instrucciones")
+        dialog.geometry("300x200")
+        dialog.resizable(False, False)
+
+        # Hacer que la ventana aparezca sobre la principal
+        dialog.transient(self.master)  # Vincula la ventana emergente a la principal
+        dialog.grab_set()  # Bloquea la interacción con la ventana principal
+        dialog.focus()  # Da foco a la ventana emergente
+
+        # Etiqueta con mensaje
+        label = ctk.CTkLabel(dialog,
+                             text="Cuando se pulse el botón GO!, "
+                                  "se encenderá un LED y después de "
+                                  "un tiempo aleatorio sonará un pitido. "
+                                  "Deberás pulsar el botón lo más rápido "
+                                  "posible, después de escuchar el pitido.",
+                             font=("Arial", 16),
+                             wraplength=280)
+        label.pack(pady=20)
+
+        # Botones para interactuar con el JOptionPane
+        button_ok = ctk.CTkButton(dialog, text="OK", command=dialog.destroy)  # Cerrar el diálogo
+        button_ok.pack(pady=10)
+
 
 class AnimatedSidebarApp(ctk.CTk):
     def __init__(self):
         super().__init__(fg_color="#242424")
         self.title("Medición de reflejos")
-        self.geometry("800x600")
+        self.geometry("800x600+100+100")
         self.iconbitmap("icons/stopwatch.ico")
         # self.fg_color = "#ffffff"
+        # Imprimar la geometria del frame principal
+        print(self.winfo_geometry())
+        print(self.winfo_width(), self.winfo_height())
+
+
 
         self.page_frame = ctk.CTkFrame(self, fg_color="#242424")
         self.page_frame.place(relwidth=1.0, relheight=1.0, x=50)
         # Páginas
         self.pages = {}
-        self.pages["led"] = LedModePage(self.page_frame)
+        self.pages["led"] = LedModePage(self.page_frame, self)
         self.pages["buzzer"] = BuzzerModePage(self.page_frame)
 
 
@@ -171,8 +243,6 @@ class AnimatedSidebarApp(ctk.CTk):
         for page in self.pages.values():
             page.pack_forget()
         self.pages[page_name].pack(fill="both", expand=True, pady=4, padx=3)
-
-
 
 
 # Ejecutar la aplicación

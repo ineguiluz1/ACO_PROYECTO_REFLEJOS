@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from ventanaRegister import VentanaRegister
-from GUIController import GUIController
+from controller.controller import Controller
+from gui import AnimatedSidebarApp
 
 class VentanaLogin:
     def __init__(self):
@@ -10,9 +11,9 @@ class VentanaLogin:
         # Crear la ventana principal
         self.ventana = ctk.CTk()
         self.ventana.title("Login")
-        self.ventana.geometry("1440x900")
+        self.ventana.geometry("1440x900+0+0")
 
-        self.controller = GUIController()
+        self.controller = Controller()
 
         # Evento para cerrar la ventana
         self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar_ventana)
@@ -89,7 +90,7 @@ class VentanaLogin:
         password = self.widget_credenciales.entry_contrasena.get()
         print(email, password)
 
-        if self.controller.verificar_login(email, password, self):
+        if self.controller.verificar_login(email, password, self, AnimatedSidebarApp):
             print("Inicio de sesión exitoso")
         else:
             print("Inicio de sesión fallido")
@@ -172,6 +173,7 @@ class PanelRegistro:
 
 
 
-VentanaLogin()
 
+if __name__ == "__main__":
+    VentanaLogin()
 

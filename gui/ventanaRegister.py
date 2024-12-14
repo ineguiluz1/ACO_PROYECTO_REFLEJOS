@@ -1,6 +1,5 @@
 import customtkinter as ctk
-from GUIController import GUIController
-from gui import AnimatedSidebarApp
+from controller.controller import Controller
 
 
 class VentanaRegister:
@@ -15,7 +14,7 @@ class VentanaRegister:
         self.ventana.geometry("1440x900")
 
         # Create the GUI controller
-        self.controller = GUIController()
+        self.controller = Controller()
 
         # Create the main frame
         self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")

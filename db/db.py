@@ -2,9 +2,9 @@ import psycopg2
 import dotenv
 import os
 
-dotenv.load_dotenv()
-conn_string = os.getenv("DB_CONN_STRING")
-
+# dotenv.load_dotenv()
+# conn_string = os.getenv("DB_CONN_STRING")
+conn_string = "postgresql://neondb_owner:v1n2ktZwMjxL@ep-restless-truth-a2tidnlv.eu-central-1.aws.neon.tech/neondb?sslmode=require"
 class DB:
     def __init__(self):
         try:
@@ -19,12 +19,11 @@ class DB:
     def create_tables(self):
         try:
             self.cursor.execute("""
-                CREATE TABLE IF NOT EXISTS players (
+                CREATE TABLE IF NOT EXISTS players(
                     id SERIAL PRIMARY KEY,
                     email VARCHAR(255) NOT NULL,
                     password VARCHAR(255) NOT NULL,
-                    username VARCHAR(255) NOT NULL,
-                );
+                    username VARCHAR(255) NOT NULL);
             """)
 
             self.cursor.execute("""CREATE TABLE IF NOT EXISTS games(
@@ -58,6 +57,3 @@ class DB:
         except Exception as e:
             print(e)
             return None
-
-
-

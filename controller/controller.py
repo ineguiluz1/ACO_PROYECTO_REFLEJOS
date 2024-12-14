@@ -1,13 +1,19 @@
 from micro.micro_manager import MicroManager
 import threading
-
+import db.db as db
+# from gui.gui import AnimatedSidebarApp
+# from gui import AnimatedSidebarApp
+# import gui as gui
 
 class Controller:
     flagEjecutando = 0
+    user = ""
 
     def __init__(self):
         # Inicializa el MicroManager con la configuración deseada
         self.micro_manager = MicroManager(port="COM3")
+        self.db = db.DB()
+
 
     def led_button_click(self, led_page):
         # Crear y lanzar un hilo
@@ -52,3 +58,18 @@ class Controller:
                 # Habilitar el botón nuevamente
                 buzzer_page.btn_retry.configure(state="normal")
                 self.flagEjecutando = 0
+
+    def verificar_login(self, email, password, ventana_login,gui):
+        player = self.db.login_player(email, password)
+        if player:
+            ventana_login.ventana.destroy()
+            self.user = email
+            print("email:", self.user)
+            # app = gui.AnimatedSidebarApp()
+            app = gui()
+            app.mainloop()
+            return True
+        return False
+
+    def registrar_jugador(self, email, password, username):
+        self.db.register_player(email, password, username)

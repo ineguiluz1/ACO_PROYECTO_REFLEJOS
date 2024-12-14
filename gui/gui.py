@@ -5,7 +5,6 @@ from controller.controller import Controller
 
 controller = Controller()
 
-
 # Configuración de customtkinter
 ctk.set_appearance_mode("Dark")  # Opciones: "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
@@ -16,32 +15,56 @@ class Sidebar(ctk.CTkFrame):
     width_step = 10
 
     def __init__(self, master, width):
-        super().__init__(master, width=width,fg_color=self.menu_color)
+        # super().__init__(master, width=width,fg_color=self.menu_color)
+        #
+        # self.master = master
+        #
+        # self.menuButton = MenuButton(self, "icons/menu.png", self.menu_color, self.expandSidebar, 10)
+        #
+        # ledButton = MenuButton(self, "icons/led.png", self.menu_color, lambda: self.switch_page("led"), 70)
+        # self.led_btn_indicator = ctk.CTkLabel(self, width=3, height=30,text="", fg_color=self.menu_color)
+        # self.led_btn_indicator.place(x=3, y=70)
+        #
+        # lbl_led = ctk.CTkLabel(self, text="LED Mode", fg_color=self.menu_color, font=("Arial", 20),
+        #                        width=100, height=30, anchor="w", padx=10)
+        # lbl_led.place(x=45, y=70)
+        # # lbl_led.bind('<Button-1>', lambda e: self.master.show_page("led"))
+        # lbl_led.bind('<Button-1>', lambda e: self.switch_page("led"))
+        #
+        # buzzerButton = MenuButton(self, "icons/buzzer.png", self.menu_color, lambda: self.switch_page("buzzer"), 130)
+        # self.buzzer_btn_indicator = ctk.CTkLabel(self, width=3, height=30, text="", fg_color=self.menu_color)
+        # self.buzzer_btn_indicator.place(x=3, y=130)
+        # lbl_buzzer = ctk.CTkLabel(self, text="Buzzer Mode", fg_color=self.menu_color, font=("Arial", 20),
+        #                           width=100, height=30, anchor="w", padx=10)
+        # lbl_buzzer.place(x=45, y=130)
+        # # lbl_buzzer.bind('<Button-1>', lambda e: self.master.show_page("buzzer"))
+        # lbl_buzzer.bind('<Button-1>', lambda e: self.switch_page("buzzer"))
+        #
+        # self.pack(side="left", fill="y", pady=4, padx=3)
+        # self.pack_propagate(False)
 
-
+        super().__init__(master, width=width, fg_color=self.menu_color)
 
         self.master = master
 
+        # Botón del menú
         self.menuButton = MenuButton(self, "icons/menu.png", self.menu_color, self.expandSidebar, 10)
 
-        ledButton = MenuButton(self, "icons/led.png", self.menu_color, lambda: self.switch_page("led"), 70)
-        self.led_btn_indicator = ctk.CTkLabel(self, width=3, height=30,text="", fg_color=self.menu_color)
-        self.led_btn_indicator.place(x=3, y=70)
+        # LED Mode
+        self.led_btn, self.led_btn_indicator, self.lbl_led = self.create_menu_item(
+            image_path="icons/led.png",
+            label_text="LED Mode",
+            y_position=70,
+            page_name="led"
+        )
 
-        lbl_led = ctk.CTkLabel(self, text="LED Mode", fg_color=self.menu_color, font=("Arial", 20),
-                               width=100, height=30, anchor="w", padx=10)
-        lbl_led.place(x=45, y=70)
-        # lbl_led.bind('<Button-1>', lambda e: self.master.show_page("led"))
-        lbl_led.bind('<Button-1>', lambda e: self.switch_page("led"))
-
-        buzzerButton = MenuButton(self, "icons/buzzer.png", self.menu_color, lambda: self.switch_page("buzzer"), 130)
-        self.buzzer_btn_indicator = ctk.CTkLabel(self, width=3, height=30, text="", fg_color=self.menu_color)
-        self.buzzer_btn_indicator.place(x=3, y=130)
-        lbl_buzzer = ctk.CTkLabel(self, text="Buzzer Mode", fg_color=self.menu_color, font=("Arial", 20),
-                                  width=100, height=30, anchor="w", padx=10)
-        lbl_buzzer.place(x=45, y=130)
-        # lbl_buzzer.bind('<Button-1>', lambda e: self.master.show_page("buzzer"))
-        lbl_buzzer.bind('<Button-1>', lambda e: self.switch_page("buzzer"))
+        # Buzzer Mode
+        self.buzzer_btn, self.buzzer_btn_indicator, self.lbl_buzzer = self.create_menu_item(
+            image_path="icons/buzzer.png",
+            label_text="Buzzer Mode",
+            y_position=130,
+            page_name="buzzer"
+        )
 
         self.pack(side="left", fill="y", pady=4, padx=3)
         self.pack_propagate(False)
@@ -88,6 +111,32 @@ class Sidebar(ctk.CTkFrame):
             self.menuButton.updateImage("icons/close.png")
             self.flagExpanded = True
 
+    def create_menu_item(self, image_path, label_text, y_position, page_name):
+        """
+        Creates a menu item with an icon, a label, and an indicator.
+        :param image_path: Path to the icon image.
+        :param label_text: Text for the menu label.
+        :param y_position: Vertical position of the menu item.
+        :param page_name: Page to switch to when the item is clicked.
+        """
+        button = MenuButton(self, image_path, self.menu_color, lambda: self.switch_page(page_name), y_position)
+        indicator = ctk.CTkLabel(self, width=3, height=30, text="", fg_color=self.menu_color)
+        indicator.place(x=3, y=y_position)
+
+        label = ctk.CTkLabel(
+            self,
+            text=label_text,
+            fg_color=self.menu_color,
+            font=("Arial", 20),
+            width=100,
+            height=30,
+            anchor="w",
+            padx=10
+        )
+        label.place(x=45, y=y_position)
+        label.bind('<Button-1>', lambda e: self.switch_page(page_name))
+
+        return button, indicator, label
 
 
 class MenuButton(ctk.CTkButton):
@@ -186,8 +235,22 @@ class BuzzerModePage(ctk.CTkFrame):
         # Crear una ventana emergente (JOptionPane)
         dialog = ctk.CTkToplevel(self)
         dialog.title("Instrucciones")
-        dialog.geometry("300x200")
+        # dialog.geometry("300x200")
         dialog.resizable(False, False)
+
+        # Obtener dimensiones y posición de la ventana principal
+        parent_x = self.winfo_rootx()/2
+        parent_y = self.winfo_rooty()
+        parent_width = self.winfo_width()
+        parent_height = self.winfo_height()/2
+
+        # Calcular posición para centrar el diálogo
+        dialog_width = 300
+        dialog_height = 200
+        pos_x = parent_x + (parent_width // 2) - (dialog_width // 2)
+        pos_y = parent_y + (parent_height // 2) - (dialog_height // 2)
+
+        dialog.geometry(f"{dialog_width}x{dialog_height}+{pos_x}+{pos_y}")
 
         # Hacer que la ventana aparezca sobre la principal
         dialog.transient(self.master)  # Vincula la ventana emergente a la principal
@@ -246,5 +309,6 @@ class AnimatedSidebarApp(ctk.CTk):
 
 
 # Ejecutar la aplicación
-app = AnimatedSidebarApp()
-app.mainloop()
+if __name__ == "__main__":
+    app = AnimatedSidebarApp()
+    app.mainloop()

@@ -27,9 +27,11 @@ class Controller:
                 # Deshabilitar el botón mientras se ejecuta
                 led_page.btn_retry.configure(state="disabled")
                 tiempo = self.micro_manager.mode1()
-
-                # Actualiza el contador en la página LED
-                led_page.update_timer(tiempo)
+                if tiempo in [-1,-2,-3]:
+                    led_page.lanzarError(tiempo)
+                else:
+                    # Actualiza el contador en la página LED
+                    led_page.update_timer(tiempo)
             except ConnectionError as e:
                 print(f"Error: {e}")
             finally:
@@ -49,9 +51,11 @@ class Controller:
                 # Deshabilitar el botón mientras se ejecuta
                 buzzer_page.btn_retry.configure(state="disabled")
                 tiempo = self.micro_manager.mode2()
-
-                # Actualiza el contador en la página Buzzer
-                buzzer_page.update_timer(tiempo)
+                if tiempo in [-1,-2,-3]:
+                    buzzer_page.lanzarError(tiempo)
+                else:
+                    # Actualiza el contador en la página Buzzer
+                    buzzer_page.update_timer(tiempo)
             except ConnectionError as e:
                 print(f"Error: {e}")
             finally:

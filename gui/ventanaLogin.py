@@ -4,10 +4,10 @@ from controller.controller import Controller
 from gui import AnimatedSidebarApp
 
 class VentanaLogin:
-    def __init__(self):
+    def __init__(self,controller):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
-
+        self.controller = controller
         # Crear la ventana principal
         self.ventana = ctk.CTk()
         self.ventana.title("Login")
@@ -90,7 +90,7 @@ class VentanaLogin:
         password = self.widget_credenciales.entry_contrasena.get()
         print(email, password)
 
-        if self.controller.verificar_login(email, password, self, AnimatedSidebarApp):
+        if self.controller.verificar_login(email, password, self, AnimatedSidebarApp, self.controller):
             print("Inicio de sesión exitoso")
         else:
             print("Inicio de sesión fallido")
@@ -175,5 +175,6 @@ class PanelRegistro:
 
 
 if __name__ == "__main__":
-    VentanaLogin()
+    controller = Controller()
+    VentanaLogin(controller)
 

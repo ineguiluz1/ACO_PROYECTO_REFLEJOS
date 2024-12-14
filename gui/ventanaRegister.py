@@ -3,7 +3,7 @@ from controller.controller import Controller
 
 
 class VentanaRegister:
-    def __init__(self):
+    def __init__(self,controller):
         # Initialize CustomTkinter (theme and scaling)
         ctk.set_appearance_mode("dark")  # Modes: "System", "Dark", "Light"
         ctk.set_default_color_theme("blue")  # Themes: "blue", "dark-blue", "green"
@@ -14,7 +14,7 @@ class VentanaRegister:
         self.ventana.geometry("800x600+0+0")
 
         # Create the GUI controller
-        self.controller = Controller()
+        self.controller = controller
 
         # Create the main frame
         self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")

@@ -63,7 +63,7 @@ class Controller:
                 buzzer_page.btn_retry.configure(state="normal")
                 self.flagEjecutando = 0
 
-    def verificar_login(self, email, password, ventana_login,gui):
+    def verificar_login(self, email, password, ventana_login,gui,controller):
         player = self.db.login_player(email, password)
         player_id = player[0]
         if player:
@@ -71,7 +71,7 @@ class Controller:
             self.user = player_id
             print("player_id:", player_id)
             # app = gui.AnimatedSidebarApp()
-            app = gui()
+            app = gui(controller)
             app.mainloop()
             return True
         return False

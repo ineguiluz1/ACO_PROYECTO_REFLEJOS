@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 from customtkinter import CTkImage
 from controller.controller import Controller
 
-controller = Controller()
+# controller = Controller()
 
 # Configuración de customtkinter
 ctk.set_appearance_mode("Dark")  # Opciones: "Dark", "Light"
@@ -66,6 +66,14 @@ class Sidebar(ctk.CTkFrame):
             page_name="buzzer"
         )
 
+        #Leaderboard
+        self.leaderboard_btn, self.leaderboard_btn_indicator, self.lbl_leaderboard = self.create_menu_item(
+            image_path="icons/leaderboard.png",
+            label_text="Leaderboard",
+            y_position=190,
+            page_name="leaderboard"
+        )
+
         self.pack(side="left", fill="y", pady=4, padx=3)
         self.pack_propagate(False)
 
@@ -74,6 +82,7 @@ class Sidebar(ctk.CTkFrame):
         if page == "led":
             self.led_btn_indicator.configure(fg_color="#ffffff")
             self.buzzer_btn_indicator.configure(fg_color=self.menu_color)
+            self.leaderboard_btn_indicator.configure(fg_color=self.menu_color)
             self.master.show_page("led")
             if self.flagExpanded:
                 self.expandSidebar()
@@ -81,7 +90,16 @@ class Sidebar(ctk.CTkFrame):
         elif page == "buzzer":
             self.led_btn_indicator.configure(fg_color=self.menu_color)
             self.buzzer_btn_indicator.configure(fg_color="#ffffff")
+            self.leaderboard_btn_indicator.configure(fg_color=self.menu_color)
             self.master.show_page("buzzer")
+            if self.flagExpanded:
+                self.expandSidebar()
+
+        elif page == "leaderboard":
+            self.led_btn_indicator.configure(fg_color=self.menu_color)
+            self.buzzer_btn_indicator.configure(fg_color=self.menu_color)
+            self.leaderboard_btn_indicator.configure(fg_color="#ffffff")
+            self.master.show_page("leaderboard")
             if self.flagExpanded:
                 self.expandSidebar()
 
@@ -160,8 +178,8 @@ class MenuButton(ctk.CTkButton):
 
 
 class LedModePage(ctk.CTkFrame):
-    def __init__(self, master, mainWindow):
-        self.mainWindow = mainWindow
+    def __init__(self, master, controller):
+        self.controller = controller
         super().__init__(master)
         self.btn_instrucciones = ctk.CTkButton(self,
                                                text="Instrucciones",
@@ -178,7 +196,7 @@ class LedModePage(ctk.CTkFrame):
         self.lbl_contador.pack(pady=(20,30))
         self.btn_retry = ctk.CTkButton(self, text="GO!", font=("Fredoka Medium", 48), width=260, height=110, fg_color="#1E90FF", text_color="white",corner_radius=25)
         self.btn_retry.pack(pady=50)
-        self.btn_retry.bind("<Button-1>", lambda e: controller.led_button_click(self))
+        self.btn_retry.bind("<Button-1>", lambda e: self.controller.led_button_click(self))
 
     def update_timer(self, tiempo):
         self.lbl_contador.configure(text=tiempo)
@@ -187,8 +205,22 @@ class LedModePage(ctk.CTkFrame):
         # Crear una ventana emergente (JOptionPane)
         dialog = ctk.CTkToplevel(self)
         dialog.title("Instrucciones")
-        dialog.geometry("300x200")
+        # dialog.geometry("300x200")
         dialog.resizable(False, False)
+
+        # Obtener dimensiones y posición de la ventana principal
+        parent_x = self.winfo_rootx()
+        parent_y = self.winfo_rooty()
+        parent_width = self.winfo_width()
+        parent_height = self.winfo_height()
+
+        # Calcular posición para centrar el diálogo
+        dialog_width = 300
+        dialog_height = 200
+        pos_x = parent_x + (parent_width // 2) - (dialog_width // 2)-150
+        pos_y = parent_y + (parent_height // 2) - (dialog_height // 2)-100
+
+        dialog.geometry(f"{dialog_width}x{dialog_height}+{pos_x}+{pos_y}")
 
         # Hacer que la ventana aparezca sobre la principal
         dialog.transient(self.master)  # Vincula la ventana emergente a la principal
@@ -210,9 +242,55 @@ class LedModePage(ctk.CTkFrame):
         button_ok = ctk.CTkButton(dialog, text="OK", command=dialog.destroy)  # Cerrar el diálogo
         button_ok.pack(pady=10)
 
+    def lanzarError(self,codigo):
+        # Crear una ventana emergente (JOptionPane)
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Alerta!")
+        dialog.resizable(False, False)
+
+        # Obtener dimensiones y posición de la ventana principal
+        parent_x = self.winfo_rootx()
+        parent_y = self.winfo_rooty()
+        parent_width = self.winfo_width()
+        parent_height = self.winfo_height()
+
+        # Calcular posición para centrar el diálogo
+        dialog_width = 300
+        dialog_height = 200
+        pos_x = parent_x + (parent_width // 2) - (dialog_width // 2) - 150
+        pos_y = parent_y + (parent_height // 2) - (dialog_height // 2) - 100
+
+        dialog.geometry(f"{dialog_width}x{dialog_height}+{pos_x}+{pos_y}")
+
+        # Hacer que la ventana aparezca sobre la principal
+        dialog.transient(self.master)  # Vincula la ventana emergente a la principal
+        dialog.grab_set()  # Bloquea la interacción con la ventana principal
+        dialog.focus()  # Da foco a la ventana emergente
+
+        if codigo == -1:
+            # Etiqueta con mensaje
+            label = ctk.CTkLabel(dialog,
+                                 text="Error: Has pulsado el pulsador antes de tiempo.",
+                                 font=("Arial", 16),
+                                 wraplength=280)
+            label.pack(pady=20)
+        elif codigo == -2:
+            # Etiqueta con mensaje
+            label = ctk.CTkLabel(dialog,
+                                 text="Error: Has pulsado el pulsador incorrecto.",
+                                 font=("Arial", 16),
+                                 wraplength=280)
+            label.pack(pady=20)
+
+
+        # Botones para interactuar con el JOptionPane
+        button_ok = ctk.CTkButton(dialog, text="OK", command=dialog.destroy)  # Cerrar el diálogo
+        button_ok.pack(pady=10)
+
 class BuzzerModePage(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master,controller):
         super().__init__(master)
+        self.controller = controller
         self.btn_instrucciones = ctk.CTkButton(self,
                                                text="Instrucciones",
                                                font=("Fredoka Medium", 20),
@@ -239,16 +317,16 @@ class BuzzerModePage(ctk.CTkFrame):
         dialog.resizable(False, False)
 
         # Obtener dimensiones y posición de la ventana principal
-        parent_x = self.winfo_rootx()/2
+        parent_x = self.winfo_rootx()
         parent_y = self.winfo_rooty()
         parent_width = self.winfo_width()
-        parent_height = self.winfo_height()/2
+        parent_height = self.winfo_height()
 
         # Calcular posición para centrar el diálogo
         dialog_width = 300
         dialog_height = 200
-        pos_x = parent_x + (parent_width // 2) - (dialog_width // 2)
-        pos_y = parent_y + (parent_height // 2) - (dialog_height // 2)
+        pos_x = parent_x + (parent_width // 2) - (dialog_width // 2)-150
+        pos_y = parent_y + (parent_height // 2) - (dialog_height // 2)-100
 
         dialog.geometry(f"{dialog_width}x{dialog_height}+{pos_x}+{pos_y}")
 
@@ -272,10 +350,64 @@ class BuzzerModePage(ctk.CTkFrame):
         button_ok = ctk.CTkButton(dialog, text="OK", command=dialog.destroy)  # Cerrar el diálogo
         button_ok.pack(pady=10)
 
+    def lanzarError(self,codigo):
+        # Crear una ventana emergente (JOptionPane)
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Alerta!")
+        dialog.resizable(False, False)
+
+        # Obtener dimensiones y posición de la ventana principal
+        parent_x = self.winfo_rootx()
+        parent_y = self.winfo_rooty()
+        parent_width = self.winfo_width()
+        parent_height = self.winfo_height()
+
+        # Calcular posición para centrar el diálogo
+        dialog_width = 300
+        dialog_height = 200
+        pos_x = parent_x + (parent_width // 2) - (dialog_width // 2) - 150
+        pos_y = parent_y + (parent_height // 2) - (dialog_height // 2) - 100
+
+        dialog.geometry(f"{dialog_width}x{dialog_height}+{pos_x}+{pos_y}")
+
+        # Hacer que la ventana aparezca sobre la principal
+        dialog.transient(self.master)  # Vincula la ventana emergente a la principal
+        dialog.grab_set()  # Bloquea la interacción con la ventana principal
+        dialog.focus()  # Da foco a la ventana emergente
+
+        if codigo == -1:
+            # Etiqueta con mensaje
+            label = ctk.CTkLabel(dialog,
+                                 text="Error: Has pulsado el pulsador antes de tiempo.",
+                                 font=("Arial", 16),
+                                 wraplength=280)
+            label.pack(pady=20)
+        elif codigo == -3:
+            # Etiqueta con mensaje
+            label = ctk.CTkLabel(dialog,
+                                 text="Error: Has pulsado el pulsador incorrecto. Recuerda que debes pulsar al pulsador iluminado.",
+                                 font=("Arial", 16),
+                                 wraplength=280)
+            label.pack(pady=20)
+
+
+        # Botones para interactuar con el JOptionPane
+        button_ok = ctk.CTkButton(dialog, text="OK", command=dialog.destroy)  # Cerrar el diálogo
+        button_ok.pack(pady=10)
+
+
+class LeaderboardPage(ctk.CTkFrame):
+    def __init__(self, master,controller):
+        super().__init__(master)
+        self.controller = controller
+        self.lbl_titulo = ctk.CTkLabel(self, text="Leaderboard", text_color="white", font=("Fredoka Medium", 96))
+        self.lbl_titulo.pack(pady=(20,20))
+
 
 class AnimatedSidebarApp(ctk.CTk):
-    def __init__(self):
+    def __init__(self,controller):
         super().__init__(fg_color="#242424")
+        self.controller = controller
         self.title("Medición de reflejos")
         self.geometry("800x600+100+100")
         self.iconbitmap("icons/stopwatch.ico")
@@ -284,16 +416,12 @@ class AnimatedSidebarApp(ctk.CTk):
         print(self.winfo_geometry())
         print(self.winfo_width(), self.winfo_height())
 
-
-
         self.page_frame = ctk.CTkFrame(self, fg_color="#242424")
         self.page_frame.place(relwidth=1.0, relheight=1.0, x=50)
         # Páginas
-        self.pages = {}
-        self.pages["led"] = LedModePage(self.page_frame, self)
-        self.pages["buzzer"] = BuzzerModePage(self.page_frame)
-
-
+        self.pages = {"led": LedModePage(self.page_frame, self.controller),
+                      "buzzer": BuzzerModePage(self.page_frame, self.controller),
+                      "leaderboard": LeaderboardPage(self.page_frame,self.controller)}
         self.sidebar = Sidebar(self, 45)
 
 
@@ -310,5 +438,6 @@ class AnimatedSidebarApp(ctk.CTk):
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
-    app = AnimatedSidebarApp()
+    controller = Controller()
+    app = AnimatedSidebarApp(controller)
     app.mainloop()

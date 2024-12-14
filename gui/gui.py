@@ -15,34 +15,6 @@ class Sidebar(ctk.CTkFrame):
     width_step = 10
 
     def __init__(self, master, width):
-        # super().__init__(master, width=width,fg_color=self.menu_color)
-        #
-        # self.master = master
-        #
-        # self.menuButton = MenuButton(self, "icons/menu.png", self.menu_color, self.expandSidebar, 10)
-        #
-        # ledButton = MenuButton(self, "icons/led.png", self.menu_color, lambda: self.switch_page("led"), 70)
-        # self.led_btn_indicator = ctk.CTkLabel(self, width=3, height=30,text="", fg_color=self.menu_color)
-        # self.led_btn_indicator.place(x=3, y=70)
-        #
-        # lbl_led = ctk.CTkLabel(self, text="LED Mode", fg_color=self.menu_color, font=("Arial", 20),
-        #                        width=100, height=30, anchor="w", padx=10)
-        # lbl_led.place(x=45, y=70)
-        # # lbl_led.bind('<Button-1>', lambda e: self.master.show_page("led"))
-        # lbl_led.bind('<Button-1>', lambda e: self.switch_page("led"))
-        #
-        # buzzerButton = MenuButton(self, "icons/buzzer.png", self.menu_color, lambda: self.switch_page("buzzer"), 130)
-        # self.buzzer_btn_indicator = ctk.CTkLabel(self, width=3, height=30, text="", fg_color=self.menu_color)
-        # self.buzzer_btn_indicator.place(x=3, y=130)
-        # lbl_buzzer = ctk.CTkLabel(self, text="Buzzer Mode", fg_color=self.menu_color, font=("Arial", 20),
-        #                           width=100, height=30, anchor="w", padx=10)
-        # lbl_buzzer.place(x=45, y=130)
-        # # lbl_buzzer.bind('<Button-1>', lambda e: self.master.show_page("buzzer"))
-        # lbl_buzzer.bind('<Button-1>', lambda e: self.switch_page("buzzer"))
-        #
-        # self.pack(side="left", fill="y", pady=4, padx=3)
-        # self.pack_propagate(False)
-
         super().__init__(master, width=width, fg_color=self.menu_color)
 
         self.master = master
@@ -100,6 +72,8 @@ class Sidebar(ctk.CTkFrame):
             self.buzzer_btn_indicator.configure(fg_color=self.menu_color)
             self.leaderboard_btn_indicator.configure(fg_color="#ffffff")
             self.master.show_page("leaderboard")
+            # self.master.get_page("leaderboard").refresh_data()
+            self.master.get_page("leaderboard").update_labels()
             if self.flagExpanded:
                 self.expandSidebar()
 
@@ -396,13 +370,99 @@ class BuzzerModePage(ctk.CTkFrame):
         button_ok.pack(pady=10)
 
 
+# class LeaderboardPage(ctk.CTkFrame):
+#     def __init__(self, master,controller):
+#         super().__init__(master)
+#         self.controller = controller
+#         self.lbl_titulo = ctk.CTkLabel(self, text="Leaderboard", text_color="white", font=("Fredoka Medium", 96))
+#         self.lbl_titulo.pack(pady=(20,20))
 class LeaderboardPage(ctk.CTkFrame):
-    def __init__(self, master,controller):
+    def __init__(self, master, controller):
         super().__init__(master)
         self.controller = controller
-        self.lbl_titulo = ctk.CTkLabel(self, text="Leaderboard", text_color="white", font=("Fredoka Medium", 96))
-        self.lbl_titulo.pack(pady=(20,20))
 
+        # Title
+        title_label = ctk.CTkLabel(self, text="Leaderboard", text_color="white", font=("Fredoka Medium", 86))
+        title_label.pack(pady=(20, 20))
+
+        # Frame for the two panels
+        panel_frame = ctk.CTkFrame(self)
+        panel_frame.pack(fill="both", expand=True)
+
+        # Initialize data for both tables (empty initially)
+        self.led_data = controller.get_best_games_by_gamemode("led")
+        self.buzzer_data = controller.get_best_games_by_gamemode("buzzer")
+
+        # To store references to labels
+        self.led_labels = []
+        self.buzzer_labels = []
+
+        # Panel 1 (Blue)
+        self.panelStatsLeds(panel_frame)
+
+        # Panel 2 (Red)
+        self.panelStatsBuzzer(panel_frame)
+
+    def panelStatsLeds(self, panel_frame):
+        # Panel 1 (Blue)
+        panel = ctk.CTkFrame(panel_frame, fg_color="blue", border_color="white", border_width=2)
+        panel.place(relx=0, rely=0, relwidth=0.47, relheight=1)
+
+        # Title
+        title_label = ctk.CTkLabel(panel, text="Led Mode", text_color="white", font=("Fredoka Medium", 24))
+        title_label.pack(pady=(20, 0))
+
+        # Create the enumeration table
+        self.create_enumeration_with_attributes(panel, self.led_data, self.led_labels)
+
+    def panelStatsBuzzer(self, panel_frame):
+        # Panel 2 (Red)
+        panel = ctk.CTkFrame(panel_frame, fg_color="red", border_color="white", border_width=2)
+        panel.place(relx=0.47, rely=0, relwidth=0.47, relheight=1)
+
+        title_label = ctk.CTkLabel(panel, text="Buzzer Mode", text_color="white", font=("Fredoka Medium", 24))
+        title_label.pack(pady=(20, 0))
+
+        # Create the enumeration table
+        self.create_enumeration_with_attributes(panel, self.buzzer_data, self.buzzer_labels)
+
+    def create_enumeration_with_attributes(self, parent, data, label_storage):
+        # Frame to hold the table
+        frame = ctk.CTkFrame(parent, border_color="white", border_width=2)
+        frame.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.8)
+
+        # Table headers
+        headers = ["ID", "Nombre", "Valor"]
+
+        for col_num, header in enumerate(headers):
+            header_label = ctk.CTkLabel(frame, text=header, width=20, anchor="w")
+            header_label.grid(row=0, column=col_num, padx=0, pady=5)
+
+        frame.grid_columnconfigure(0, weight=1)
+        frame.grid_columnconfigure(1, weight=2)
+        frame.grid_columnconfigure(2, weight=1)
+
+        # Create rows for the data
+        for row_num, (id_, name, value) in enumerate(data, start=1):
+            row_color = "gray17" if row_num % 2 == 0 else "gray25"
+            row_frame = ctk.CTkFrame(frame, fg_color=row_color)
+            row_frame.grid(row=row_num, column=0, columnspan=3, sticky="ew", padx=10, pady=5)
+
+            # Define and store labels for later updates
+            id_label = ctk.CTkLabel(row_frame, text=str(id_), width=10)
+            name_label = ctk.CTkLabel(row_frame, text=name, width=120)
+            value_label = ctk.CTkLabel(row_frame, text=str(value), width=10)
+
+            id_label.grid(row=0, column=0, padx=10, pady=5)
+            name_label.grid(row=0, column=1, padx=10, pady=5)
+            value_label.grid(row=0, column=2, padx=10, pady=5)
+
+            row_frame.grid_columnconfigure(0, weight=1)
+            row_frame.grid_columnconfigure(1, weight=2)
+            row_frame.grid_columnconfigure(2, weight=1)
+
+            # Save label references
+            label_storage.append((id_label, name_label, value_label))
 
 class AnimatedSidebarApp(ctk.CTk):
     def __init__(self,controller):
@@ -411,10 +471,11 @@ class AnimatedSidebarApp(ctk.CTk):
         self.title("Medición de reflejos")
         self.geometry("800x600+100+100")
         self.iconbitmap("icons/stopwatch.ico")
+        self.resizable(False, False)
         # self.fg_color = "#ffffff"
         # Imprimar la geometria del frame principal
-        print(self.winfo_geometry())
-        print(self.winfo_width(), self.winfo_height())
+        # print(self.winfo_geometry())
+        # print(self.winfo_width(), self.winfo_height())
 
         self.page_frame = ctk.CTkFrame(self, fg_color="#242424")
         self.page_frame.place(relwidth=1.0, relheight=1.0, x=50)
@@ -434,6 +495,9 @@ class AnimatedSidebarApp(ctk.CTk):
         for page in self.pages.values():
             page.pack_forget()
         self.pages[page_name].pack(fill="both", expand=True, pady=4, padx=3)
+
+    def get_page(self, page_name):
+        return self.pages[page_name]
 
 
 # Ejecutar la aplicación

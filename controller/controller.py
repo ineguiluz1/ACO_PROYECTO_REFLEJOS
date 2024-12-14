@@ -1,3 +1,4 @@
+
 from micro.micro_manager import MicroManager
 import threading
 import db.db as db
@@ -7,7 +8,7 @@ import db.db as db
 
 class Controller:
     flagEjecutando = 0
-    user = ""
+    user = 0
 
     def __init__(self):
         # Inicializa el MicroManager con la configuración deseada
@@ -61,10 +62,11 @@ class Controller:
 
     def verificar_login(self, email, password, ventana_login,gui):
         player = self.db.login_player(email, password)
+        player_id = player[0]
         if player:
             ventana_login.ventana.destroy()
-            self.user = email
-            print("email:", self.user)
+            self.user = player_id
+            print("player_id:", player_id)
             # app = gui.AnimatedSidebarApp()
             app = gui()
             app.mainloop()
@@ -73,3 +75,5 @@ class Controller:
 
     def registrar_jugador(self, email, password, username):
         self.db.register_player(email, password, username)
+
+

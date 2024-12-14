@@ -57,3 +57,27 @@ class DB:
         except Exception as e:
             print(e)
             return None
+
+
+    def save_game(self, player_id, game_mode, score):
+        try:
+            self.cursor.execute("""
+                INSERT INTO games (player_id, game_mode, score) VALUES (%s, %s, %s);
+            """, (player_id, game_mode, score))
+            self.conn.commit()
+        except Exception as e:
+            print(e)
+
+    def get_best_games_by_gamemode(self, game_mode):
+        try:
+            self.cursor.execute("""
+                SELECT * FROM games WHERE game_mode = %s ORDER BY score DESC LIMIT 5;
+            """, (game_mode,))
+            return self.cursor.fetchall()
+        except Exception as e:
+            print(e)
+            return None
+
+if __name__ == "__main__":
+    db = DB()
+    db.save_game(1, "led", 826)

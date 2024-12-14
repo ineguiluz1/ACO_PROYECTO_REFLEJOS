@@ -11,7 +11,7 @@ class VentanaLogin:
         # Crear la ventana principal
         self.ventana = ctk.CTk()
         self.ventana.title("Login")
-        self.ventana.geometry("1440x900+0+0")
+        self.ventana.geometry("800x600+0+0")
 
         self.controller = Controller()
 
@@ -20,7 +20,7 @@ class VentanaLogin:
 
         # Crear el frame principal
         self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")
-        self.frame.pack(fill="both", expand=True, padx=20, pady=20)
+        self.frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         # Añadir título y subtítulo
         self.titulo_subtitulo = TituloSubtitulo(self.frame, title="Bienvenido a nuestra App!!",
@@ -28,31 +28,31 @@ class VentanaLogin:
 
         # Agregar credenciales
         self.widget_credenciales = WidgetCredenciales(self.frame)
-        self.widget_credenciales.frame.pack(pady=20)
+        self.widget_credenciales.frame.pack(pady=10)
 
         # Botón de inicio de sesión
         self.btn_iniciar_sesion = ctk.CTkButton(
             self.frame,
             text="Iniciar Sesión",
-            font=ctk.CTkFont("Fredoka Medium", size=32),
-            width=400,
+            font=ctk.CTkFont("Fredoka Medium", size=24),
+            width= 300,
             height=40,
             corner_radius=40,
             fg_color="#27AE60",
             text_color="#FFFFFF"
         )
-        self.btn_iniciar_sesion.pack(pady=(0, 20))
+        self.btn_iniciar_sesion.pack(pady=(0, 10))
 
         self.btn_iniciar_sesion.configure(command=self.inicar_sesion)
 
         # Crear panel de registro
         self.panel_registro = PanelRegistro(self.frame)
-        self.panel_registro.frame.pack(pady=20)
+        self.panel_registro.frame.pack(pady=10)
 
         self.btn_crear_cuenta = ctk.CTkButton(
             self.frame,
             text="Crear Cuenta",
-            font=ctk.CTkFont("Fredoka Medium", size=16),
+            font=ctk.CTkFont("Fredoka Medium", size=14),
             width=200,
             height=50,
             corner_radius=40,
@@ -100,40 +100,40 @@ class VentanaLogin:
 class WidgetCredenciales:
     def __init__(self, parent_frame):
         self.frame = ctk.CTkFrame(parent_frame, fg_color="#2A2A2A")
-        self.frame.pack(pady=20)
+        self.frame.pack(pady=10)
 
         # Email input
         self.lbl_email = ctk.CTkLabel(
-            self.frame, text="Email:", font=ctk.CTkFont("Fredoka Medium", size=32)
+            self.frame, text="Email:", font=ctk.CTkFont("Fredoka Medium", size=24)
         )
-        self.lbl_email.pack(pady=(10, 5))
+        self.lbl_email.pack(pady=(5, 2))
 
         self.entry_email = ctk.CTkEntry(
             self.frame,
-            font=ctk.CTkFont("Fredoka Medium", size=18),
+            font=ctk.CTkFont("Fredoka Medium", size=14),
             width=400,
             height=40,
             corner_radius=10,
         )
-        self.entry_email.pack(pady=(0, 20))
+        self.entry_email.pack(pady=(0, 10))
 
         # Password input
         self.lbl_contrasena = ctk.CTkLabel(
             self.frame,
             text="Contraseña:",
-            font=ctk.CTkFont("Fredoka Medium", size=32),
+            font=ctk.CTkFont("Fredoka Medium", size=24),
         )
-        self.lbl_contrasena.pack(pady=(10, 5))
+        self.lbl_contrasena.pack(pady=(5, 2))
 
         self.entry_contrasena = ctk.CTkEntry(
             self.frame,
-            font=ctk.CTkFont("Fredoka Medium", size=18),
+            font=ctk.CTkFont("Fredoka Medium", size=14),
             width=400,
             height=40,
             corner_radius=10,
             show="*",
         )
-        self.entry_contrasena.pack(pady=(0, 20))
+        self.entry_contrasena.pack(pady=(0, 10))
 
 
 class TituloSubtitulo(ctk.CTkFrame):
@@ -144,32 +144,32 @@ class TituloSubtitulo(ctk.CTkFrame):
         self.title_label = ctk.CTkLabel(
             self,
             text=title,
-            font=ctk.CTkFont("Fredoka Medium", size=96),
+            font=ctk.CTkFont("Fredoka Medium", size=60),
             text_color="#FFFFFF",
         )
-        self.title_label.pack(pady=(10, 5))
+        self.title_label.pack(pady=(5, 2))
 
         self.subtitle_label = ctk.CTkLabel(
             self,
             text=subtitulo,
-            font=ctk.CTkFont("Fredoka Medium", size=40),
+            font=ctk.CTkFont("Fredoka Medium", size=30),
             text_color="#B3B3B3",
         )
-        self.subtitle_label.pack(pady=(0, 20))
+        self.subtitle_label.pack(pady=(0, 5))
 
 
 class PanelRegistro:
     def __init__(self, parent_frame):
         self.frame = ctk.CTkFrame(parent_frame, fg_color="#2A2A2A")
-        self.frame.pack(pady=20)
+        self.frame.pack(pady=10)
 
         self.lbl_no_register = ctk.CTkLabel(
             self.frame,
             text="Si no tienes cuenta puedes crear una aquí.",
-            font=ctk.CTkFont("Fredoka Medium", size=20),
+            font=ctk.CTkFont("Fredoka Medium", size=14),
             text_color="#FFFFFF"
         )
-        self.lbl_no_register.pack(pady=(0, 20))
+        self.lbl_no_register.pack(pady=(0, 5))
 
 
 

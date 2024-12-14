@@ -11,14 +11,14 @@ class VentanaRegister:
         # Create the main window
         self.ventana = ctk.CTk()
         self.ventana.title("Registro")
-        self.ventana.geometry("1440x900")
+        self.ventana.geometry("800x600+0+0")
 
         # Create the GUI controller
         self.controller = Controller()
 
         # Create the main frame
         self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")
-        self.frame.pack(fill="both", expand=True, padx=20, pady=20)
+        self.frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         # Add widgets
         self.crear_widgets()
@@ -58,7 +58,7 @@ class VentanaRegister:
             height=40,
             corner_radius=10,
         )
-        self.entry_email.pack(pady=(0, 20))
+        self.entry_email.pack(pady=(0, 10))
 
         # Password input
         lbl_contrasena = ctk.CTkLabel(
@@ -66,7 +66,7 @@ class VentanaRegister:
             text="Contraseña:",
             font=ctk.CTkFont("Fredoka Medium", size=24),
         )
-        lbl_contrasena.pack(pady=(10, 5))
+        lbl_contrasena.pack(pady=(5, 2))
 
         self.entry_contrasena = ctk.CTkEntry(
             self.frame,
@@ -76,13 +76,13 @@ class VentanaRegister:
             corner_radius=10,
             show="*",
         )
-        self.entry_contrasena.pack(pady=(0, 20))
+        self.entry_contrasena.pack(pady=(0, 10))
 
         # Nickname input
         lbl_nickname = ctk.CTkLabel(
             self.frame, text="Nickname:", font=ctk.CTkFont("Fredoka Medium", size=24)
         )
-        lbl_nickname.pack(pady=(10, 5))
+        lbl_nickname.pack(pady=(5, 2))
 
         self.entry_nickname = ctk.CTkEntry(
             self.frame,
@@ -91,7 +91,7 @@ class VentanaRegister:
             height=40,
             corner_radius=10,
         )
-        self.entry_nickname.pack(pady=(0, 40))
+        self.entry_nickname.pack(pady=(0, 20))
 
         # Create account button
         self.btn_crear_cuenta = ctk.CTkButton(
@@ -104,7 +104,7 @@ class VentanaRegister:
             fg_color="#27AE60",
             text_color="#ffffff"
         )
-        self.btn_crear_cuenta.pack(pady=(10, 10))
+        self.btn_crear_cuenta.pack(pady=(5, 5))
 
         # Bind hover events to the button
         self.btn_crear_cuenta.bind("<Enter>", self.cambiar_color_entrada)

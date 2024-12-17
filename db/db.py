@@ -78,6 +78,16 @@ class DB:
             print(e)
             return None
 
+    def get_game_info_by_gamemode(self, game_mode):
+        try:
+            self.cursor.execute("""
+                SELECT COUNT(*) as game_number, AVG(score) as avg_score, MIN(score) as best_score FROM games WHERE game_mode = %s;
+            """, (game_mode,))
+            return self.cursor.fetchall()
+        except Exception as e:
+            print(e)
+            return None
+
 if __name__ == "__main__":
     db = DB()
-    db.save_game(1, "led", 826)
+    info = db.get_game_info_by_gamemode("led")

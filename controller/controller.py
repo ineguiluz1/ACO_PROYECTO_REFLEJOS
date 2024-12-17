@@ -1,18 +1,18 @@
 from micro.micro_manager import MicroManager
 import threading
-import db.db as db
+from db.db import DB
 # from gui.gui import AnimatedSidebarApp
 # from gui import AnimatedSidebarApp
 # import gui as gui
 
 class Controller:
     flagEjecutando = 0
-    user = 0
+    user = 1
 
     def __init__(self):
         # Inicializa el MicroManager con la configuración deseada
         self.micro_manager = MicroManager(port="COM3")
-        self.db = db.DB()
+        self.db = DB()
 
 
     def led_button_click(self, led_page):
@@ -27,11 +27,12 @@ class Controller:
                 # Deshabilitar el botón mientras se ejecuta
                 led_page.btn_retry.configure(state="disabled")
                 tiempo = self.micro_manager.mode1()
-                if tiempo in [-1,-2,-3]:
-                    led_page.lanzarError(tiempo)
+                if tiempo in ["-1","-2","-3"]:
+                    led_page.lanzarError(int(tiempo))
                 else:
                     # Actualiza el contador en la página LED
                     led_page.update_timer(tiempo)
+                    self.db.save_game(self.user, "led", tiempo)
             except ConnectionError as e:
                 print(f"Error: {e}")
             finally:
@@ -51,11 +52,12 @@ class Controller:
                 # Deshabilitar el botón mientras se ejecuta
                 buzzer_page.btn_retry.configure(state="disabled")
                 tiempo = self.micro_manager.mode2()
-                if tiempo in [-1,-2,-3]:
-                    buzzer_page.lanzarError(tiempo)
+                if tiempo in ["-1","-2","-3"]:
+                    buzzer_page.lanzarError(int(tiempo))
                 else:
                     # Actualiza el contador en la página Buzzer
                     buzzer_page.update_timer(tiempo)
+                    self.db.save_game(self.user, "buzzer", tiempo)
             except ConnectionError as e:
                 print(f"Error: {e}")
             finally:
@@ -78,3 +80,10 @@ class Controller:
 
     def registrar_jugador(self, email, password, username):
         self.db.register_player(email, password, username)
+
+
+    def save_game(self, game_mode, score):
+        self.db.save_game(self.user, game_mode, score)
+
+    def get_best_games_by_gamemode(self, game_mode):
+        return self.db.get_best_games_by_gamemode(game_mode)

@@ -70,10 +70,16 @@ class DB:
 
     def get_best_games_by_gamemode(self, game_mode):
         try:
+            results = []
             self.cursor.execute("""
-                SELECT * FROM games WHERE game_mode = %s ORDER BY score DESC LIMIT 5;
-            """, (game_mode,))
-            return self.cursor.fetchall()
+                SELECT p.username,g.score FROM games g, players p WHERE g.player_id = p.id AND g.game_mode = %s ORDER BY g.score ASC LIMIT 5;
+                """, (game_mode,))
+            query = self.cursor.fetchall()
+            for index, (username, score) in enumerate(query, start=1):
+                tuple = (index, username, score)
+                results.append(tuple)
+            return results
+            # return self.cursor.fetchall()
         except Exception as e:
             print(e)
             return None

@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from customtkinter import CTkImage
+from pygments.styles.dracula import foreground
+
 from controller.controller import Controller
 
 # controller = Controller()
@@ -393,6 +395,14 @@ class LeaderboardPage(ctk.CTkFrame):
         self.led_data = controller.get_best_games_by_gamemode("led")
         self.buzzer_data = controller.get_best_games_by_gamemode("buzzer")
 
+        # Stats for LED mode
+        self.game_info_led = controller.get_game_info_by_gamemode("led")
+
+
+
+        #Stats for Buzzer mode
+        self.game_info_buzzer = controller.get_game_info_by_gamemode("buzzer")
+
         # To store references to labels
         self.led_labels = []
         self.buzzer_labels = []
@@ -403,9 +413,11 @@ class LeaderboardPage(ctk.CTkFrame):
         # Panel 2 (Red)
         self.panelStatsBuzzer(panel_frame)
 
+
+
     def panelStatsLeds(self, panel_frame):
         # Panel 1 (Blue)
-        panel = ctk.CTkFrame(panel_frame, fg_color="blue", border_color="white", border_width=2)
+        panel = ctk.CTkFrame(panel_frame, fg_color="gray25", border_color="white")
         panel.place(relx=0, rely=0, relwidth=0.47, relheight=1)
 
         # Title
@@ -415,9 +427,14 @@ class LeaderboardPage(ctk.CTkFrame):
         # Create the enumeration table
         self.create_enumeration_with_attributes(panel, self.led_data, self.led_labels)
 
+        # Create game stats for LED
+        self.create_game_stats_led(panel, self.game_info_led)
+
+
+
     def panelStatsBuzzer(self, panel_frame):
         # Panel 2 (Red)
-        panel = ctk.CTkFrame(panel_frame, fg_color="red", border_color="white", border_width=2)
+        panel = ctk.CTkFrame(panel_frame, fg_color="gray25", border_color="white")
         panel.place(relx=0.47, rely=0, relwidth=0.47, relheight=1)
 
         title_label = ctk.CTkLabel(panel, text="Buzzer Mode", text_color="white", font=("Fredoka Medium", 24))
@@ -426,10 +443,13 @@ class LeaderboardPage(ctk.CTkFrame):
         # Create the enumeration table
         self.create_enumeration_with_attributes(panel, self.buzzer_data, self.buzzer_labels)
 
+        # Create game stats for buzzer
+        self.create_game_stats_buzzer(panel, self.game_info_buzzer)
+
     def create_enumeration_with_attributes(self, parent, data, label_storage):
         # Frame to hold the table
         frame = ctk.CTkFrame(parent, border_color="white", border_width=2)
-        frame.place(relx=0.05, rely=0.1, relwidth=0.9, relheight=0.8)
+        frame.pack(fill="both", expand=True, padx=10, pady=(0,5))
 
         # Table headers
         headers = ["ID", "Nombre", "Valor"]
@@ -463,6 +483,37 @@ class LeaderboardPage(ctk.CTkFrame):
 
             # Save label references
             label_storage.append((id_label, name_label, value_label))
+
+    def create_game_stats_led(self, parent, data):
+        frame = ctk.CTkFrame(parent, fg_color="transparent")
+        frame.pack(fill="x", padx=10, pady=10)
+
+        label_n_games = ctk.CTkLabel(frame, text="Número de juegos: "+str(self.game_info_led[0][0]), text_color="white", font=("Fredoka Medium", 14))
+        label_n_games.pack(anchor="w", padx=10, pady=2)
+
+        label_avg_score = ctk.CTkLabel(frame, text="Puntuación media: "+str(self.game_info_led[0][1]), text_color="white", font=("Fredoka Medium", 14))
+        label_avg_score.pack(anchor="w", padx=10, pady=2)
+
+        label_best_score = ctk.CTkLabel(frame, text="Mejor puntuación: "+str(self.game_info_led[0][2]), text_color="white", font=("Fredoka Medium", 14))
+        label_best_score.pack(anchor="w", padx=10, pady=2)
+
+    def create_game_stats_buzzer(self, parent, data):
+        frame = ctk.CTkFrame(parent, fg_color="transparent")
+        frame.pack(fill="x", padx=10, pady=10)
+
+        label_n_games = ctk.CTkLabel(frame, text="Número de juegos: "+str(self.game_info_buzzer[0][0]), text_color="white", font=("Fredoka Medium", 14))
+        label_n_games.pack(anchor="w", padx=10, pady=2)
+
+        label_avg_score = ctk.CTkLabel(frame, text="Puntuación media: "+str(self.game_info_buzzer[0][1]), text_color="white", font=("Fredoka Medium", 14))
+        label_avg_score.pack(anchor="w", padx=10, pady=2)
+
+        label_best_score = ctk.CTkLabel(frame, text="Mejor puntuación: "+str(self.game_info_buzzer[0][2]), text_color="white", font=("Fredoka Medium", 14))
+        label_best_score.pack(anchor="w", padx=10, pady=2)
+
+
+
+
+
 
 class AnimatedSidebarApp(ctk.CTk):
     def __init__(self,controller):

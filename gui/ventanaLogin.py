@@ -90,7 +90,7 @@ class VentanaLogin:
         password = self.widget_credenciales.entry_contrasena.get()
         print(email, password)
 
-        if self.controller.verificar_login(email, password, self, AnimatedSidebarApp, self.controller):
+        if self.controller.verificar_login(email, password, self, AnimatedSidebarApp , self.controller):
             print("Inicio de sesión exitoso")
         else:
             print("Inicio de sesión fallido")

@@ -84,15 +84,21 @@ class DB:
             print(e)
             return None
 
-    def get_game_info_by_gamemode(self, game_mode):
+    def get_game_info_by_gamemode(self, game_mode, id):
         try:
             self.cursor.execute("""
-                SELECT COUNT(*) as game_number, AVG(score) as avg_score, MIN(score) as best_score FROM games WHERE game_mode = %s;
-            """, (game_mode,))
+                SELECT 
+                    COUNT(*) as game_number, 
+                    ROUND(AVG(score), 2) as avg_score, 
+                    MIN(score) as best_score 
+                FROM games 
+                WHERE game_mode = %s AND player_id = %s;
+            """, (game_mode,id,))
             return self.cursor.fetchall()
         except Exception as e:
             print(e)
             return None
+
 
 if __name__ == "__main__":
     db = DB()

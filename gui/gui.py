@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from customtkinter import CTkImage
-from pygments.styles.dracula import foreground
+# from pygments.styles.dracula import foreground
 
 from controller.controller import Controller
 
@@ -372,12 +372,6 @@ class BuzzerModePage(ctk.CTkFrame):
         button_ok.pack(pady=10)
 
 
-# class LeaderboardPage(ctk.CTkFrame):
-#     def __init__(self, master,controller):
-#         super().__init__(master)
-#         self.controller = controller
-#         self.lbl_titulo = ctk.CTkLabel(self, text="Leaderboard", text_color="white", font=("Fredoka Medium", 96))
-#         self.lbl_titulo.pack(pady=(20,20))
 class LeaderboardPage(ctk.CTkFrame):
     def __init__(self, master, controller):
         super().__init__(master)
@@ -385,7 +379,7 @@ class LeaderboardPage(ctk.CTkFrame):
 
         # Title
         title_label = ctk.CTkLabel(self, text="Leaderboard", text_color="white", font=("Fredoka Medium", 86))
-        title_label.pack(pady=(20, 20))
+        title_label.pack(pady=(20, 10))
 
         # Frame for the two panels
         panel_frame = ctk.CTkFrame(self)
@@ -397,8 +391,6 @@ class LeaderboardPage(ctk.CTkFrame):
 
         # Stats for LED mode
         self.game_info_led = controller.get_game_info_by_gamemode("led")
-
-
 
         #Stats for Buzzer mode
         self.game_info_buzzer = controller.get_game_info_by_gamemode("buzzer")
@@ -417,12 +409,12 @@ class LeaderboardPage(ctk.CTkFrame):
 
     def panelStatsLeds(self, panel_frame):
         # Panel 1 (Blue)
-        panel = ctk.CTkFrame(panel_frame, fg_color="gray25", border_color="white")
+        panel = ctk.CTkFrame(panel_frame, fg_color="gray17", border_color="white")
         panel.place(relx=0, rely=0, relwidth=0.47, relheight=1)
 
         # Title
         title_label = ctk.CTkLabel(panel, text="Led Mode", text_color="white", font=("Fredoka Medium", 24))
-        title_label.pack(pady=(20, 0))
+        title_label.pack(pady=(20, 10))
 
         # Create the enumeration table
         self.create_enumeration_with_attributes(panel, self.led_data, self.led_labels)
@@ -434,11 +426,11 @@ class LeaderboardPage(ctk.CTkFrame):
 
     def panelStatsBuzzer(self, panel_frame):
         # Panel 2 (Red)
-        panel = ctk.CTkFrame(panel_frame, fg_color="gray25", border_color="white")
+        panel = ctk.CTkFrame(panel_frame, fg_color="gray17", border_color="white")
         panel.place(relx=0.47, rely=0, relwidth=0.47, relheight=1)
 
         title_label = ctk.CTkLabel(panel, text="Buzzer Mode", text_color="white", font=("Fredoka Medium", 24))
-        title_label.pack(pady=(20, 0))
+        title_label.pack(pady=(20, 10))
 
         # Create the enumeration table
         self.create_enumeration_with_attributes(panel, self.buzzer_data, self.buzzer_labels)
@@ -448,11 +440,12 @@ class LeaderboardPage(ctk.CTkFrame):
 
     def create_enumeration_with_attributes(self, parent, data, label_storage):
         # Frame to hold the table
-        frame = ctk.CTkFrame(parent, border_color="white", border_width=2)
+        # frame = ctk.CTkFrame(parent, border_color="white", border_width=2)
+        frame = ctk.CTkFrame(parent)
         frame.pack(fill="both", expand=True, padx=10, pady=(0,5))
 
         # Table headers
-        headers = ["ID", "Nombre", "Valor"]
+        headers = ["Pos", "Nombre", "Valor"]
 
         for col_num, header in enumerate(headers):
             header_label = ctk.CTkLabel(frame, text=header, width=20, anchor="w")
@@ -485,35 +478,72 @@ class LeaderboardPage(ctk.CTkFrame):
             label_storage.append((id_label, name_label, value_label))
 
     def create_game_stats_led(self, parent, data):
+        # Create a frame for the statistics
         frame = ctk.CTkFrame(parent, fg_color="transparent")
-        frame.pack(fill="x", padx=10, pady=10)
+        frame.pack(fill="x", padx=10, pady=20)
 
-        label_n_games = ctk.CTkLabel(frame, text="Número de juegos: "+str(self.game_info_led[0][0]), text_color="white", font=("Fredoka Medium", 14))
-        label_n_games.pack(anchor="w", padx=10, pady=2)
+        # Create and store references to labels
+        self.led_stats_labels = {}
 
-        label_avg_score = ctk.CTkLabel(frame, text="Puntuación media: "+str(self.game_info_led[0][1]), text_color="white", font=("Fredoka Medium", 14))
-        label_avg_score.pack(anchor="w", padx=10, pady=2)
+        self.led_stats_labels['n_games'] = ctk.CTkLabel(frame, text="Número de juegos: " + str(data[0][0]),
+                                                        text_color="white", font=("Fredoka Medium", 14))
+        self.led_stats_labels['n_games'].pack(anchor="w", padx=10, pady=2)
 
-        label_best_score = ctk.CTkLabel(frame, text="Mejor puntuación: "+str(self.game_info_led[0][2]), text_color="white", font=("Fredoka Medium", 14))
-        label_best_score.pack(anchor="w", padx=10, pady=2)
+        self.led_stats_labels['avg_score'] = ctk.CTkLabel(frame, text="Puntuación media: " + str(data[0][1]),
+                                                          text_color="white", font=("Fredoka Medium", 14))
+        self.led_stats_labels['avg_score'].pack(anchor="w", padx=10, pady=2)
+
+        self.led_stats_labels['best_score'] = ctk.CTkLabel(frame, text="Mejor puntuación: " + str(data[0][2]),
+                                                           text_color="white", font=("Fredoka Medium", 14))
+        self.led_stats_labels['best_score'].pack(anchor="w", padx=10, pady=2)
 
     def create_game_stats_buzzer(self, parent, data):
+        # Create a frame for the statistics
         frame = ctk.CTkFrame(parent, fg_color="transparent")
-        frame.pack(fill="x", padx=10, pady=10)
+        frame.pack(fill="x", padx=10, pady=20)
 
-        label_n_games = ctk.CTkLabel(frame, text="Número de juegos: "+str(self.game_info_buzzer[0][0]), text_color="white", font=("Fredoka Medium", 14))
-        label_n_games.pack(anchor="w", padx=10, pady=2)
+        # Create and store references to labels
+        self.buzzer_stats_labels = {}
 
-        label_avg_score = ctk.CTkLabel(frame, text="Puntuación media: "+str(self.game_info_buzzer[0][1]), text_color="white", font=("Fredoka Medium", 14))
-        label_avg_score.pack(anchor="w", padx=10, pady=2)
+        self.buzzer_stats_labels['n_games'] = ctk.CTkLabel(frame, text="Número de juegos: " + str(data[0][0]),
+                                                           text_color="white", font=("Fredoka Medium", 14))
+        self.buzzer_stats_labels['n_games'].pack(anchor="w", padx=10, pady=2)
 
-        label_best_score = ctk.CTkLabel(frame, text="Mejor puntuación: "+str(self.game_info_buzzer[0][2]), text_color="white", font=("Fredoka Medium", 14))
-        label_best_score.pack(anchor="w", padx=10, pady=2)
+        self.buzzer_stats_labels['avg_score'] = ctk.CTkLabel(frame, text="Puntuación media: " + str(data[0][1]),
+                                                             text_color="white", font=("Fredoka Medium", 14))
+        self.buzzer_stats_labels['avg_score'].pack(anchor="w", padx=10, pady=2)
 
+        self.buzzer_stats_labels['best_score'] = ctk.CTkLabel(frame, text="Mejor puntuación: " + str(data[0][2]),
+                                                              text_color="white", font=("Fredoka Medium", 14))
+        self.buzzer_stats_labels['best_score'].pack(anchor="w", padx=10, pady=2)
 
+    def update_labels(self):
+        # Update LED data
+        self.led_data = self.controller.get_best_games_by_gamemode("led")
+        for i, (id_label, name_label, value_label) in enumerate(self.led_labels):
+            id_, name, value = self.led_data[i]
+            # id_label.configure(text=str(id_))
+            name_label.configure(text=name)
+            value_label.configure(text=str(value))
 
+        # Update buzzer data
+        self.buzzer_data = self.controller.get_best_games_by_gamemode("buzzer")
+        for i, (id_label, name_label, value_label) in enumerate(self.buzzer_labels):
+            id_, name, value = self.buzzer_data[i]
+            # id_label.configure(text=str(id_))
+            name_label.configure(text=name)
+            value_label.configure(text=str(value))
 
+        self.game_info_led = controller.get_game_info_by_gamemode("led")
+        self.game_info_buzzer = controller.get_game_info_by_gamemode("buzzer")
 
+        self.led_stats_labels['n_games'].configure(text="Número de juegos: " + str(self.game_info_led[0][0]))
+        self.led_stats_labels['avg_score'].configure(text="Puntuación media: " + str(self.game_info_led[0][1]))
+        self.led_stats_labels['best_score'].configure(text="Mejor puntuación: " + str(self.game_info_led[0][2]))
+
+        self.buzzer_stats_labels['n_games'].configure(text="Número de juegos: " + str(self.game_info_buzzer[0][0]))
+        self.buzzer_stats_labels['avg_score'].configure(text="Puntuación media: " + str(self.game_info_buzzer[0][1]))
+        self.buzzer_stats_labels['best_score'].configure(text="Mejor puntuación: " + str(self.game_info_buzzer[0][2]))
 
 class AnimatedSidebarApp(ctk.CTk):
     def __init__(self,controller):

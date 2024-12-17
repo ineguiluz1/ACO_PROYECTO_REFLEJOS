@@ -89,4 +89,4 @@ class Controller:
         return self.db.get_best_games_by_gamemode(game_mode)
 
     def get_game_info_by_gamemode(self, game_mode):
-        return self.db.get_game_info_by_gamemode(game_mode)
+        return self.db.get_game_info_by_gamemode(game_mode, self.user)

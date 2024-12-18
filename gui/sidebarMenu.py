@@ -1,15 +1,12 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from customtkinter import CTkImage
-# from pygments.styles.dracula import foreground
 
 from controller.controller import Controller
 
-# controller = Controller()
-
 # Configuración de customtkinter
-ctk.set_appearance_mode("Dark")  # Opciones: "Dark", "Light"
-ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("blue")
 
 class Sidebar(ctk.CTkFrame):
     menu_color = "#383838"
@@ -181,7 +178,7 @@ class LedModePage(ctk.CTkFrame):
         # Crear una ventana emergente (JOptionPane)
         dialog = ctk.CTkToplevel(self)
         dialog.title("Instrucciones")
-        # dialog.geometry("300x200")
+        # dialog.after(200, lambda: dialog.iconbitmap('icons/stopwatch.ico'))
         dialog.resizable(False, False)
 
         # Obtener dimensiones y posición de la ventana principal
@@ -408,7 +405,7 @@ class LeaderboardPage(ctk.CTkFrame):
 
 
     def panelStatsLeds(self, panel_frame):
-        # Panel 1 (Blue)
+        # Panel 1 (Led)
         panel = ctk.CTkFrame(panel_frame, fg_color="gray17", border_color="white")
         panel.place(relx=0, rely=0, relwidth=0.47, relheight=1)
 
@@ -425,7 +422,7 @@ class LeaderboardPage(ctk.CTkFrame):
 
 
     def panelStatsBuzzer(self, panel_frame):
-        # Panel 2 (Red)
+        # Panel 2 (Buzzer)
         panel = ctk.CTkFrame(panel_frame, fg_color="gray17", border_color="white")
         panel.place(relx=0.47, rely=0, relwidth=0.47, relheight=1)
 
@@ -440,7 +437,6 @@ class LeaderboardPage(ctk.CTkFrame):
 
     def create_enumeration_with_attributes(self, parent, data, label_storage):
         # Frame to hold the table
-        # frame = ctk.CTkFrame(parent, border_color="white", border_width=2)
         frame = ctk.CTkFrame(parent)
         frame.pack(fill="both", expand=True, padx=10, pady=(0,5))
 
@@ -530,12 +526,11 @@ class LeaderboardPage(ctk.CTkFrame):
         self.buzzer_data = self.controller.get_best_games_by_gamemode("buzzer")
         for i, (id_label, name_label, value_label) in enumerate(self.buzzer_labels):
             id_, name, value = self.buzzer_data[i]
-            # id_label.configure(text=str(id_))
             name_label.configure(text=name)
             value_label.configure(text=str(value))
 
-        self.game_info_led = controller.get_game_info_by_gamemode("led")
-        self.game_info_buzzer = controller.get_game_info_by_gamemode("buzzer")
+        self.game_info_led = self.controller.get_game_info_by_gamemode("led")
+        self.game_info_buzzer = self.controller.get_game_info_by_gamemode("buzzer")
 
         self.led_stats_labels['n_games'].configure(text="Número de juegos: " + str(self.game_info_led[0][0]))
         self.led_stats_labels['avg_score'].configure(text="Puntuación media: " + str(self.game_info_led[0][1]))
@@ -553,10 +548,6 @@ class AnimatedSidebarApp(ctk.CTk):
         self.geometry("800x600+100+100")
         self.iconbitmap("icons/stopwatch.ico")
         self.resizable(False, False)
-        # self.fg_color = "#ffffff"
-        # Imprimar la geometria del frame principal
-        # print(self.winfo_geometry())
-        # print(self.winfo_width(), self.winfo_height())
 
         self.page_frame = ctk.CTkFrame(self, fg_color="#242424")
         self.page_frame.place(relwidth=1.0, relheight=1.0, x=50)

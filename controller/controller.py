@@ -7,7 +7,7 @@ from db.db import DB
 
 class Controller:
     flagEjecutando = 0
-    user = 1
+    user = -1
 
     def __init__(self):
         # Inicializa el MicroManager con la configuración deseada
@@ -69,7 +69,7 @@ class Controller:
         player = self.db.login_player(email, password)
         player_id = player[0]
         if player:
-            ventana_login.ventana.destroy()
+            ventana_login.destroy()
             self.user = player_id
             print("player_id:", player_id)
             # app = gui.AnimatedSidebarApp()

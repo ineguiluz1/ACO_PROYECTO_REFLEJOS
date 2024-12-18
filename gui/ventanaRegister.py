@@ -1,23 +1,24 @@
 import customtkinter as ctk
 from controller.controller import Controller
 
+ctk.set_appearance_mode("dark")  # Modes: "System", "Dark", "Light"
+ctk.set_default_color_theme("blue")  # Themes: "blue", "dark-blue", "green"
 
-class VentanaRegister:
+class VentanaRegister(ctk.CTk):
     def __init__(self,controller):
-        # Initialize CustomTkinter (theme and scaling)
-        ctk.set_appearance_mode("dark")  # Modes: "System", "Dark", "Light"
-        ctk.set_default_color_theme("blue")  # Themes: "blue", "dark-blue", "green"
-
+        super().__init__(fg_color="#242424")
         # Create the main window
-        self.ventana = ctk.CTk()
-        self.ventana.title("Registro")
-        self.ventana.geometry("800x600+0+0")
+        self.title("Registro")
+        self.geometry("800x600+100+100")
+        self.iconbitmap("icons/stopwatch.ico")
+
+        self.resizable(False, False)
 
         # Create the GUI controller
         self.controller = controller
 
         # Create the main frame
-        self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")
+        self.frame = ctk.CTkFrame(self, fg_color="#2A2A2A")
         self.frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         # Add widgets
@@ -27,13 +28,15 @@ class VentanaRegister:
         self.btn_crear_cuenta.configure(command=self.registrar_jugador)
 
         # Run the main loop
-        self.ventana.mainloop()
+        self.mainloop()
 
     def registrar_jugador(self):
         email = self.entry_email.get()
         password = self.entry_contrasena.get()
         username = self.entry_nickname.get()
         self.controller.registrar_jugador(email, password, username)
+        self.abrir_ventana_login()
+
 
     def crear_widgets(self):
         # Title label
@@ -117,3 +120,16 @@ class VentanaRegister:
     def cambiar_color_salida(self, event):
         self.btn_crear_cuenta.configure(fg_color="#27AE60")
 
+    def cerrar_ventana(self):
+        self.quit()
+        self.destroy()
+
+    def abrir_ventana_login(self):
+        from gui import VentanaLogin
+        self.cerrar_ventana()
+        VentanaLogin(self.controller)
+
+
+if __name__ == "__main__":
+    controller = Controller()
+    VentanaRegister(controller)

@@ -1,25 +1,26 @@
 import customtkinter as ctk
-from ventanaRegister import VentanaRegister
 from controller.controller import Controller
 from gui import AnimatedSidebarApp
 
-class VentanaLogin:
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
+
+class VentanaLogin(ctk.CTk):
     def __init__(self,controller):
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("blue")
+        super().__init__(fg_color="#242424")
         self.controller = controller
-        # Crear la ventana principal
-        self.ventana = ctk.CTk()
-        self.ventana.title("Login")
-        self.ventana.geometry("800x600+0+0")
+        self.title("Login")
+        self.geometry("800x600+100+100")
+        self.iconbitmap("icons/stopwatch.ico")
+        self.resizable(False, False)
 
         self.controller = Controller()
 
         # Evento para cerrar la ventana
-        self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar_ventana)
+        self.protocol("WM_DELETE_WINDOW", self.cerrar_ventana)
 
         # Crear el frame principal
-        self.frame = ctk.CTkFrame(self.ventana, fg_color="#2A2A2A")
+        self.frame = ctk.CTkFrame(self, fg_color="#2A2A2A")
         self.frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         # Añadir título y subtítulo
@@ -67,7 +68,7 @@ class VentanaLogin:
         self.btn_crear_cuenta.configure(command=self.abrir_ventana_registro)
 
         # Ejecutar la ventana principal
-        self.ventana.mainloop()
+        self.mainloop()
 
 
     # Event handlers
@@ -78,12 +79,13 @@ class VentanaLogin:
         self.btn_crear_cuenta.configure(fg_color="#9B59B6")
 
     def abrir_ventana_registro(self):
+        from gui import VentanaRegister
         self.cerrar_ventana()
-        VentanaRegister()
+        VentanaRegister(self.controller)
 
     def cerrar_ventana(self):
-        self.ventana.quit()
-        self.ventana.destroy()
+        self.quit()
+        self.destroy()
 
     def inicar_sesion(self):
         email = self.widget_credenciales.entry_email.get()
